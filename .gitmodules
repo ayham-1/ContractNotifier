@@ -1,3 +1,0 @@
-[submodule "vendor/libnop"]
-	path = vendor/libnop
-	url = https://github.com/google/libnop.git
