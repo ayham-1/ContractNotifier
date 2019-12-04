@@ -6,8 +6,7 @@
 *.la
 *.lai
 *.so
-*.dll
-*.dylib
+*.dll *.dylib
 
 # Qt-es
 object_script.*.Release
@@ -44,3 +43,8 @@ CMakeLists.txt.user*
 
 # Vim stuff.
 *.swp
+
+# Cmake Stuff.
+bin/
+build/
+Makefile
