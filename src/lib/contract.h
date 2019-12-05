@@ -16,8 +16,17 @@ struct Contract {
     int _notify_from_months = 0;
     int _notify_from_days = 0;
 
+    friend bool operator==(const Contract &lhs, const Contract &rhs) {
+        if (lhs._name == rhs._name &&
+                lhs._desc == rhs._desc &&
+                lhs._expiry == rhs._expiry &&
+                lhs._notify_from_months == rhs._notify_from_months &&
+                lhs._notify_from_days == rhs._notify_from_days) return true;
+        else return false;
+    }
+
     template<typename Archive>
-    void serialize(Archive& ar, const unsigned int version) {
+        void serialize(Archive& ar, const unsigned int version) {
         ar & _name;
         ar & _desc;
         ar & _expiry;

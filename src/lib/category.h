@@ -1,21 +1,31 @@
-#ifndef CONTRACT_H
-#define CONTRACT_H
+#ifndef CATEGORY_H
+#define CATEGORY_H
 
 #include <string>
 #include <vector>
 #include "contract.h"
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
 
 struct Category {
     std::string _name;
     std::string _desc;
     std::vector<Contract> _contracts;
 
-    auto operator==(const Category &lhs, const Category &rhs) -> bool {
+    friend bool operator==(const Category &lhs, const Category &rhs) {
         if (lhs._name == rhs._name &&
                 lhs._desc == rhs._desc &&
                 lhs._contracts == rhs._contracts)
             return true;
         else return false;
+    }
+
+    template<typename Archive>
+        void serialize(Archive & ar, const unsigned int version) {
+            ar & _name;
+            ar & _desc;
+            ar & _contracts;
     }
 };
 
@@ -67,9 +77,9 @@ auto category_moveContract(Category &src, Category &dest, Contract &item) -> voi
 }
 
 auto category_getContract(Category &category, std::string _name) -> Contract& {
-    for (auto item : category._contracts)
-        if (item._name = _name)
-            return item;
+    for (int i = 0; i < category._contracts.size(); i++)
+        if (category._contracts[i]._name == _name)
+            return category._contracts[i];
     throw std::runtime_error("Contract does not exist.");
 }
 
