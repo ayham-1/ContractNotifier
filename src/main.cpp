@@ -5,6 +5,7 @@
 #include "lib/db.h"
 #include "lib/export.h"
 #include "lib/import.h"
+#include "lib/notify.h"
 #include <iostream>
 #include <fstream>
 
@@ -30,6 +31,8 @@ int main(int argc, char *argv[]) {
     import_db_as_db(db2, "db.db");
 
     std::cout << db2._categories[0]._name;
+
+    notify_by_email(db2);
 
     QApplication a(argc, argv);
     MainWindow w;
