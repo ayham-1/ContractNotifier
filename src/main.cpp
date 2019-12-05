@@ -3,6 +3,7 @@
 #include "lib/contract.h"
 #include "lib/category.h"
 #include "lib/db.h"
+#include "lib/export.h"
 #include <iostream>
 #include <fstream>
 
@@ -21,13 +22,7 @@ int main(int argc, char *argv[]) {
     db._categories.push_back(category);
     db._notifier_email = "lol@gmail.com";
 
-    std::ofstream ofs("filename");
-    {
-        boost::archive::text_oarchive oa(ofs);
-        // write class instance to archive
-        oa << category;
-        // archive and stream closed when destructors are called
-    }
+    export_db_as_db(db, "db.db");
 
     QApplication a(argc, argv);
     MainWindow w;
