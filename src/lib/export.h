@@ -1,5 +1,5 @@
 #ifndef EXPORT_H
-#define EXPORT_h
+#define EXPORT_H
 
 #include <string>
 #include <vector>
