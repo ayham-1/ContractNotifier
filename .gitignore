@@ -51,4 +51,4 @@ Makefile
 
 # Git Secret Stuff.
 .gitsecret/keys/random_seed
-.password
+password.h
