@@ -1,7 +1,0 @@
-- repo: https://github.com/sobolevn/git-secret
-      rev: v2.3.0
-      hooks:
-          - id: git-secret-hide
-            name: encrypt secrets
-            files: pre-commit.sh
-            types: ["file", "executable","bash"]
