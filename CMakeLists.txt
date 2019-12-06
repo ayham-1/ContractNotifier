@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 project("ContractNotifier")
 
 set(CMAKE_AUTOMOC ON)
@@ -13,8 +13,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
-# Set c++ standard
-set(CMAKE_CXX_STANDARD 11)
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Set build type definitions.
@@ -41,7 +41,7 @@ add_subdirectory("vendor/mail/")
 file(GLOB_RECURSE hdrs "src/*.h")
 file(GLOB_RECURSE srcs "src/*.cpp")
 file(GLOB_RECURSE ui "src/*.ui")
-include_directories("src/")
+include_directories("." "src/")
 
 add_executable(contractNotifier ${hdrs} ${srcs})
 target_link_libraries(contractNotifier PUBLIC Qt5::Core Qt5::Widgets Boost::serialization mailio ${CMAKE_THREAD_LIBS_INIT})

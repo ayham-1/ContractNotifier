@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     Contract contract;
     QDate date;
     date = QDate::currentDate();
-    date = date.addDays(-2);
+    date = date.addDays(2);
     contract_setExpiry(contract, date);
     contract._name = "akham";
     contract._desc = "This is akham";

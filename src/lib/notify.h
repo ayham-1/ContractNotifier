@@ -8,6 +8,7 @@
 #include "contract.h"
 #include "category.h"
 #include "db.h"
+#include "password.h"
 
 #include <mailio/message.hpp>
 #include <mailio/smtp.hpp>
@@ -87,7 +88,7 @@ auto notify_sendEmail(const std::string &recipient_addr, const std::string &subj
         // connect to server
         smtps conn("smtp.gmail.com", 587);
         // modify username/password to use real credentials
-        conn.authenticate("contractnotifier@gmail.com", "de3^BGg5Tc9Dy941VUWB1Cgo$uqUECnwuJQR5cBVmgSL!NU8zfwV8Xk*QLx*QdV^q9RvICt^3Ic7C@4qYw@Uhl#56PU0fQJ&7NI", smtps::auth_method_t::START_TLS);
+        conn.authenticate("contractnotifier@gmail.com", EMAIL_PASSWORD, smtps::auth_method_t::START_TLS);
         conn.submit(msg);
     }
     catch (smtp_error& exc) {
