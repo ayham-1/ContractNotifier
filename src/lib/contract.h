@@ -15,6 +15,8 @@ struct Contract {
     std::string _expiry = "";
     int _notify_from_months = 0;
     int _notify_from_days = 0;
+    bool _did_notify = false;
+    bool _expired = false;
 
     friend bool operator==(const Contract &lhs, const Contract &rhs) {
         if (lhs._name == rhs._name &&
@@ -32,6 +34,8 @@ struct Contract {
         ar & _expiry;
         ar & _notify_from_months;
         ar & _notify_from_days;
+        ar & _did_notify;
+        ar & _expired;
     }
 };
 

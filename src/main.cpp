@@ -13,7 +13,12 @@ int main(int argc, char *argv[]) {
     Contract contract;
     QDate date;
     date = QDate::currentDate();
+    date = date.addDays(-2);
     contract_setExpiry(contract, date);
+    contract._name = "akham";
+    contract._desc = "This is akham";
+    contract._notify_from_months = 0;
+    contract._notify_from_days = 1;
 
     Category category;
     category._name = "khello";
@@ -22,17 +27,11 @@ int main(int argc, char *argv[]) {
 
     DB db;
     db._categories.push_back(category);
-    db._notifier_email = "lol@gmail.com";
+    db._notifier_email = "ayhamaboualfadl@gmail.com";
 
     export_db_as_db(db, "db.db");
 
-    DB db2;
-
-    import_db_as_db(db2, "db.db");
-
-    std::cout << db2._categories[0]._name;
-
-    notify_by_email(db2);
+    notify_check(db);
 
     QApplication a(argc, argv);
     MainWindow w;
