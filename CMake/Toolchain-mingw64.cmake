@@ -3,7 +3,7 @@
 # Typical usage:
 #    *) install cross compiler: `sudo apt-get install mingw-w64`
 #    *) cmake -H. -B_build_mingw -DCMAKE_TOOLCHAIN_FILE="${PWD}/toolchains/linux-mingw-w64.cmake"
-
+#
 set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
 set(TOOLCHAIN_PREFIX x86_64-w64-mingw32)
@@ -36,6 +36,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+
 set(Qt5_DIR /usr/lib/x86_64-linux-gnu/cmake/Qt5)
 set(Qt5Core_DIR /usr/lib/x86_64-linux-gnu/cmake/Qt5Core)
 set(Qt5Gui_DIR /usr/lib/x86_64-linux-gnu/cmake/Qt5Gui)
@@ -51,3 +52,4 @@ set(Qt5Qml_DIR /usr/lib/x86_64-linux-gnu/cmake/Qt5Qml)
 set(Qt5Quick_DIR /usr/lib/x86_64-linux-gnu/cmake/Qt5Quick)
 set(Qt5QuickWidgets_DIR /usr/lib/x86_64-linux-gnu/cmake/Qt5QuickWidgets)
 set(Qt5Xml_DIR /usr/lib/x86_64-linux-gnu/cmake/Qt5Xml)
+set(BOOST_ROOT /usr/lib/x86_64-linux-gnu/cmake/Boost)
