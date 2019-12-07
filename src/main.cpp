@@ -31,11 +31,11 @@ int main(int argc, char *argv[]) {
 
     export_db_as_db(db, "db.db");
 
-    notify_check(db);
 
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
 
+    notify_check(db, false, true);
     return a.exec();
 }

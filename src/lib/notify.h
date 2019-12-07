@@ -12,6 +12,7 @@
 
 #include <mailio/message.hpp>
 #include <mailio/smtp.hpp>
+#include <QSystemTrayIcon>
 #include <iostream>
 
 #define EMAILFORMAT_SUBJECT(name) \
@@ -52,8 +53,12 @@ auto notify_check(DB &db, bool by_email = true, bool by_notification = true) -> 
                         } catch (std::exception &e) {
                             std::cout << e.what();
                         }
+                    // notify by notification
                     if (by_notification) {
                         // TODO: Implement it.
+                        QSystemTrayIcon icon;
+                        icon.show();
+                        icon.showMessage("This is a test", "Test too");
                     }
 
                     // change states/switches.
