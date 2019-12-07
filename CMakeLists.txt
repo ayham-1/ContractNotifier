@@ -42,7 +42,7 @@ find_package(Boost COMPONENTS serialization REQUIRED)
 # mailio
 option(MAILIO_BUILD_EXAMPLES OFF)
 option(MAILIO_BUILD_DOCUMENTATION OFF)
-add_subdirectory("vendor/mailio/")
+add_subdirectory("vendor/mail/")
 
 file(GLOB_RECURSE hdrs "src/*.h")
 file(GLOB_RECURSE srcs "src/*.cpp")
