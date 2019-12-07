@@ -13,6 +13,8 @@ set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
 set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++)
 set(CMAKE_Fortran_COMPILER ${TOOLCHAIN_PREFIX}-gfortran)
 set(CMAKE_RC_COMPILER ${TOOLCHAIN_PREFIX}-windres)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++ -static -lpthread")	
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc -static-libstdc++ -static -lpthread")	
 
 # target environment on the build host system
 set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
@@ -21,3 +23,6 @@ set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+
+set(CMAKE_FIND_LIBRARY_PREFIXES "lib" "")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".dll" ".dll.a" ".lib" ".a")
