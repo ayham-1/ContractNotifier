@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     contract._name = "akham";
     contract._desc = "This is akham";
     contract._notify_from_months = 0;
-    contract._notify_from_days = 1;
+    contract._notify_from_days = 2;
 
     Category category;
     category._name = "khello";
@@ -30,12 +30,11 @@ int main(int argc, char *argv[]) {
     db._notifier_email = "ayhamaboualfadl@gmail.com";
 
     export_db_as_db(db, "db.db");
-
+    notify_check(db, false, true);
 
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
 
-    notify_check(db, false, true);
     return a.exec();
 }

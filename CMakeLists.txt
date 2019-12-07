@@ -24,6 +24,13 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
 	add_definitions(-D__RELEASE__)
 endif (CMAKE_BUILD_TYPE STREQUAL "Release")
 
+# Platform Definitions.
+if (MINGW)
+	add_definitions(-D__MINGW__)
+else()
+	add_definitions(-D__LINUX__)
+endif(MINGW)
+
 # Libraries
 
 # Qt5
@@ -35,7 +42,7 @@ find_package(Boost COMPONENTS serialization REQUIRED)
 # mailio
 option(MAILIO_BUILD_EXAMPLES OFF)
 option(MAILIO_BUILD_DOCUMENTATION OFF)
-add_subdirectory("vendor/mail/")
+add_subdirectory("vendor/mailio/")
 
 file(GLOB_RECURSE hdrs "src/*.h")
 file(GLOB_RECURSE srcs "src/*.cpp")

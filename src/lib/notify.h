@@ -27,6 +27,12 @@
     std::string("Days remaining until end of contract: ") + std::to_string(months*30) + std::to_string(days) + std::string(".\r\n") + \
     std::string("For issues, please report it to: ayhamaboualfadl@gmail.com")
 
+#define NOTIFICATION_SUBJECT(name) \
+    std::string("Contract with name '") + name + std::string("' is near ending.")
+
+#define NOTIFICATION_CONTENT(name, expiry) \
+    std::string("The contract '") + name + std::string("' expires at: ") + expiry + std::string(".");
+
 auto notify_sendEmail(const std::string &recipient_addr, const std::string &subject, const std::string &content) -> void;
 
 auto notify_check(DB &db, bool by_email = true, bool by_notification = true) -> void {
@@ -56,9 +62,11 @@ auto notify_check(DB &db, bool by_email = true, bool by_notification = true) -> 
                     // notify by notification
                     if (by_notification) {
                         // TODO: Implement it.
-                        QSystemTrayIcon icon;
-                        icon.show();
-                        icon.showMessage("This is a test", "Test too");
+#ifdef __MINGW__
+                        system((std::string("notifu /p") + NOTIFICATION_SUBJECT(contract._name) + std::string(" /m") + NOTIFICATION_SUBJECT(contract._expiry)).c_str());
+#elif defined(__LINUX__)
+                        system((std::string("notify-send \"") + NOTIFICATION_SUBJECT(contract._name) + std::string("\" \"") + NOTIFICATION_SUBJECT(contract._expiry) + std::string("\"")).c_str());
+#endif
                     }
 
                     // change states/switches.
@@ -89,7 +97,7 @@ auto notify_sendEmail(const std::string &recipient_addr, const std::string &subj
         msg.add_recipient(mail_address("ContractNotifier", recipient_addr));// set the correct recipent name and address
         msg.subject(subject);
         msg.content(content);
-
+    
         // connect to server
         smtps conn("smtp.gmail.com", 587);
         // modify username/password to use real credentials
