@@ -54,7 +54,6 @@ auto category_addContract(Category &category, Contract item) -> void {
 
 auto category_moveContract(Category &src, Category &dest, Contract &item) -> void {
     // Check if the item is in dest.
-    // TODO: Decide whether it is hard or soft check.
     for (auto i : dest._contracts) {
         if (i == item) {
             throw std::runtime_error("Contract already exists in destination.");

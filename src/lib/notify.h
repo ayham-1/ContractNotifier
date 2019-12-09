@@ -61,7 +61,6 @@ auto notify_check(DB &db, bool by_email = true, bool by_notification = true) -> 
                         }
                     // notify by notification
                     if (by_notification) {
-                        // TODO: Implement it.
 #ifdef __MINGW__
                         system((std::string("notifu /p") + NOTIFICATION_SUBJECT(contract._name) + std::string(" /m") + NOTIFICATION_SUBJECT(contract._expiry)).c_str());
 #elif defined(__LINUX__)
@@ -76,7 +75,7 @@ auto notify_check(DB &db, bool by_email = true, bool by_notification = true) -> 
             if (current_date > expiry_date) {
                 // expire the contract.
                 contract._expired = true;
-                // TODO: Move contract to 'Deactivated' Category.
+                category_moveContract(category, db._deactivatedCategory, contract);
             }
         }
     }

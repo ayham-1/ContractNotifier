@@ -11,6 +11,7 @@
 
 struct DB {
     std::vector<Category> _categories;
+    Category _deactivatedCategory;
     std::string _notifier_email = "";
 
     template<typename Archive>
