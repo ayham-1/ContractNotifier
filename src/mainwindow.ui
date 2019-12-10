@@ -34,7 +34,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="closeBtn_2">
+        <widget class="QPushButton" name="settingsBtn">
          <property name="text">
           <string>Settings</string>
          </property>
