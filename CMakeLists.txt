@@ -49,5 +49,5 @@ file(GLOB_RECURSE srcs "src/*.cpp")
 file(GLOB_RECURSE ui "src/*.ui")
 include_directories("." "src/")
 
-add_executable(contractNotifier ${hdrs} ${srcs})
+add_executable(contractNotifier ${ui} ${hdrs} ${srcs})
 target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization mailio ${CMAKE_THREAD_LIBS_INIT})
