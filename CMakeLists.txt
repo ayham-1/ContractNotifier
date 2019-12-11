@@ -39,10 +39,9 @@ find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 # Boost stuff
 find_package(Boost COMPONENTS serialization REQUIRED)
 
-# mailio
-option(MAILIO_BUILD_EXAMPLES OFF)
-option(MAILIO_BUILD_DOCUMENTATION OFF)
-add_subdirectory("vendor/mail/")
+# curl
+find_package(CURL REQUIRED)
+include_directories(${CURL_INCLUDE_DIR})
 
 file(GLOB_RECURSE hdrs "src/*.h")
 file(GLOB_RECURSE srcs "src/*.cpp")
@@ -50,4 +49,4 @@ file(GLOB_RECURSE ui "src/*.ui")
 include_directories("." "src/")
 
 add_executable(contractNotifier ${ui} ${hdrs} ${srcs})
-target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization mailio ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} ${CURL_LIBRARIES})

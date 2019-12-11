@@ -10,13 +10,14 @@
 #include "db.h"
 #include "password.h"
 
-#include <mailio/message.hpp>
-#include <mailio/smtp.hpp>
 #include <QSystemTrayIcon>
 #include <iostream>
+#include <curl/curl.h>
+#include <ctime>
+#include <cstring>
 
 #define EMAILFORMAT_SUBJECT(name) \
-    std::string("WARNING: Contract with name '") + name + std::string("' is near ending.")
+    std::string("WARNING: Contract with name '") + name + std::string("' is near ending.\r\n")
 
 #define EMAILFORMAT_CONTENT(name, desc, expiry, months, days) \
     std::string("This email is automatically generated from ContractNotificator") + std::string(".\r\n") + \
@@ -53,9 +54,9 @@ auto notify_check(DB &db, bool by_email = true, bool by_notification = true) -> 
                     // notify by email.
                     if (by_email)
                         try {
-                        notify_sendEmail(db._notifier_email, std::string(EMAILFORMAT_SUBJECT(contract._name)), 
-                                std::string(EMAILFORMAT_CONTENT(contract._name, contract._desc,
-                                    contract._expiry, contract._notify_from_months, contract._notify_from_days)));
+                            notify_sendEmail(db._notifier_email, std::string(EMAILFORMAT_SUBJECT(contract._name)), 
+                                    std::string(EMAILFORMAT_CONTENT(contract._name, contract._desc,
+                                            contract._expiry, contract._notify_from_months, contract._notify_from_days)));
                         } catch (std::exception &e) {
                             std::cout << e.what();
                         }
@@ -81,34 +82,166 @@ auto notify_check(DB &db, bool by_email = true, bool by_notification = true) -> 
     }
 }
 
-auto notify_sendEmail(const std::string &recipient_addr, const std::string &subject, const std::string &content) -> void {
-    using mailio::message;
-    using mailio::mail_address;
-    using mailio::smtps;
-    using mailio::smtp_error;
-    using mailio::dialog_error;
-    using std::cout;
-    using std::endl;
+//////////////////////////////////////
+///// Copied from somewhere
+//////////////////////////////////////
+static std::string payloadText[11];
 
-    try {
-        message msg;
-        msg.from(mail_address("ContractNotifier", "contractnotifier@gmail.com"));// set the correct sender name and address
-        msg.add_recipient(mail_address("ContractNotifier", recipient_addr));// set the correct recipent name and address
-        msg.subject(subject);
-        msg.content(content);
-    
-        // connect to server
-        smtps conn("smtp.gmail.com", 587);
-        // modify username/password to use real credentials
-        conn.authenticate("contractnotifier@gmail.com", EMAIL_PASSWORD, smtps::auth_method_t::START_TLS);
-        conn.submit(msg);
+std::string dateTimeNow();
+std::string generateMessageId();
+
+void setPayloadText(const std::string &to,
+        const std::string &from,
+        const std::string &cc,
+        const std::string &nameFrom,
+        const std::string &subject,
+        const std::string &body) {
+    payloadText[ 0] = "Date: "  + dateTimeNow();
+    payloadText[ 1] = "To: <"   + to   + ">\r\n";
+    payloadText[ 2] = "From: <" + from + "> (" + nameFrom + ")\r\n";
+    payloadText[ 3] = "Cc: <"   + cc   + "> (" + nameFrom + ")\r\n";
+    payloadText[ 4] = "Message-ID: <" + generateMessageId() + "@" + from.substr(from.find('@') + 1) + ">\r\n";
+    payloadText[ 5] = "Subject: " + subject + "\r\n";
+    payloadText[ 6] = "\r\n";
+    payloadText[ 7] = body + "\r\n";
+    payloadText[ 8] = "\r\n";
+    payloadText[ 9] = "\r\n"; // "It could be a lot of lines, could be MIME encoded, whatever.\r\n";
+    payloadText[10] = "\r\n"; // "Check RFC5322.\r\n";
+}
+
+std::string dateTimeNow() {
+    const int RFC5322_TIME_LEN = 32;
+    time_t t;
+    struct tm *tm;
+
+    std::string ret;
+    ret.resize(RFC5322_TIME_LEN);
+
+    time(&t);
+    tm = localtime(&t);
+
+    strftime(&ret[0], RFC5322_TIME_LEN, "%a, %d %b %Y %H:%M:%S %z", tm);
+
+    return ret;
+}
+
+std::string generateMessageId()
+{
+    const int MESSAGE_ID_LEN = 37;
+    time_t t;
+    struct tm tm;
+
+    std::string ret;
+    ret.resize(15);
+    ret.reserve(MESSAGE_ID_LEN);
+
+    static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghi"
+        "pqrstuvwxyz";
+
+    while (ret.size() < MESSAGE_ID_LEN) {
+        ret += alphanum[rand() % (sizeof(alphanum) - 1)];
     }
-    catch (smtp_error& exc) {
-        throw std::runtime_error(exc.what());
+
+    return ret;
+}
+
+struct upload_status { int lines_read; };
+
+static size_t payload_source(void *ptr, size_t size, size_t nmemb, void *userp)
+{
+    std::string s = generateMessageId();
+
+    static const char *pt[12] = {};
+
+    for (int i = 0; i < 11; ++i) {
+        pt[i] = payloadText[i].c_str();
     }
-    catch (dialog_error& exc) {
-        throw std::runtime_error(exc.what());
+
+    pt[11] = NULL;
+
+    struct upload_status *upload_ctx = (struct upload_status *)userp;
+    const char *data;
+
+    if ((size == 0) || (nmemb == 0) || ((size*nmemb) < 1)) {
+        return 0;
     }
+
+    data = pt[upload_ctx->lines_read];
+
+    if (data) {
+        size_t len = strlen(data);
+        memcpy(ptr, data, len);
+        upload_ctx->lines_read++;
+
+        return len;
+    }
+
+    return 0;
+}
+
+CURLcode sendEmail(const std::string &to,
+        const std::string &from,
+        const std::string &cc,
+        const std::string &nameFrom,
+        const std::string &subject,
+        const std::string &body,
+        const std::string &url,
+        const std::string &password)
+{
+    CURLcode ret = CURLE_OK;
+
+    struct curl_slist *recipients = NULL;
+    struct upload_status upload_ctx;
+
+    upload_ctx.lines_read = 0;
+
+    CURL *curl = curl_easy_init();
+
+    setPayloadText(to, from, cc, nameFrom, subject, body);
+
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_USERNAME,     from    .c_str());
+        curl_easy_setopt(curl, CURLOPT_PASSWORD,     password.c_str());
+        curl_easy_setopt(curl, CURLOPT_URL,          url     .c_str());
+
+        curl_easy_setopt(curl, CURLOPT_USE_SSL,      (long)CURLUSESSL_ALL);
+
+        curl_easy_setopt(curl, CURLOPT_MAIL_FROM,    ("<" + from + ">").c_str());
+        recipients = curl_slist_append(recipients,   ("<" + to   + ">").c_str());
+        recipients = curl_slist_append(recipients,   ("<" + cc   + ">").c_str());
+
+        curl_easy_setopt(curl, CURLOPT_MAIL_RCPT,    recipients);
+        curl_easy_setopt(curl, CURLOPT_READFUNCTION, payload_source);
+        curl_easy_setopt(curl, CURLOPT_READDATA,     &upload_ctx);
+        curl_easy_setopt(curl, CURLOPT_UPLOAD,       1L);
+        curl_easy_setopt(curl, CURLOPT_VERBOSE,      1L);
+
+        ret = curl_easy_perform(curl);
+
+        if (ret != CURLE_OK) {
+            throw std::runtime_error("curl_easy_perform() failed");
+        }
+
+        curl_slist_free_all(recipients);
+        curl_easy_cleanup(curl);
+    }
+
+    return ret;
+}
+//////////////////////////////////////
+
+auto notify_sendEmail(const std::string &recipient_addr, const std::string &subject, const std::string &content) -> void {
+        sendEmail(recipient_addr,
+                "contractnotifier@gmail.com",
+                "contractnotifier@gmail.com",
+                "ContractNotifier",
+                subject,
+                content,
+                "smtp.gmail.com:587",
+                EMAIL_PASSWORD);
 }
 
 #endif
