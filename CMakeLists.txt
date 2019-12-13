@@ -72,3 +72,10 @@ target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serializati
 if (WIN32)
 	target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} CURL::libcurl)
 endif(WIN32)
+
+# res files:
+add_custom_command(
+	TARGET contractNotifier POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy
+	${CMAKE_SOURCE_DIR}/res/icon.png
+	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/icon.png)

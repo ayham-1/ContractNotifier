@@ -24,25 +24,27 @@ MainWindow::MainWindow(QWidget *parent)
                 else{
                 show();
                 activateWindow();}}});
-
 }
 
 MainWindow::~MainWindow() {
 
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-        if(closing)
-        {
+void MainWindow::closeEvent(QCloseEvent *event) {
+        if(closing) {
             event->accept();
         }
-        else
-        {
+        else {
             this->hide();
             event->ignore();
         }
 }
 
-void MainWindow::onCloseBtn_clicked() {
+void MainWindow::on_closeBtn_clicked() {
+    hide();
+}
+
+void MainWindow::on_settingsBtn_clicked() {
+    settingsWin* win = new settingsWin(this);
+    win->show();
 }

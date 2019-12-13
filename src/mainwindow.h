@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include "ui_mainwindow.h"
+#include "settingsWin.h"
 
 namespace Ui {
     class mainWin;
@@ -21,8 +22,8 @@ public:
     ~MainWindow();
 
 private slots:
-    void onCloseBtn_clicked();
-    //void onSettingsBtn_clicked();
+    void on_closeBtn_clicked();
+    void on_settingsBtn_clicked();
     //void onDeleteBtn_clicked();
     //void onInfoBtn_clicked();
     void closeEvent(QCloseEvent *event) override;
