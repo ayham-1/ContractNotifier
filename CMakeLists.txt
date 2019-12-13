@@ -13,6 +13,21 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
+# Set Compiler Specific Commands, Cross-Platform
+if(MSVC)
+	# Microsoft visual studio
+	if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
+		string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+	else()
+		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W4 /EHsc")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /SUBSYSTEM:WINDOWS /W4 /EHsc")
+	endif()
+elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+	# GNU compilers
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -Wno-long-long")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -mwindows -Wno-long-long")
+endif()
+
 # Set C++ standard set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED 17)
 
@@ -25,12 +40,12 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
 endif (CMAKE_BUILD_TYPE STREQUAL "Release")
 
 # Platform Definitions.
-if (MINGW)
-	add_definitions(-D__MINGW__)
-else()
+if (WIN32)
+	add_definitions(-D__WIN32__)
+endif(WIN32)
+if (UNIX)
 	add_definitions(-D__LINUX__)
-endif(MINGW)
-
+endif(UNIX)
 # Libraries
 
 # Qt5
@@ -40,7 +55,11 @@ find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 find_package(Boost COMPONENTS serialization REQUIRED)
 
 # curl
+if (WIN32)
+	find_package(CURL CONFIG REQUIRED)
+elseif(UNIX)
 find_package(CURL REQUIRED)
+endif()
 include_directories(${CURL_INCLUDE_DIR})
 
 file(GLOB_RECURSE hdrs "src/*.h")
@@ -50,3 +69,6 @@ include_directories("." "src/")
 
 add_executable(contractNotifier ${ui} ${hdrs} ${srcs})
 target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} ${CURL_LIBRARIES})
+if (WIN32)
+	target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} CURL:::libcurl)
+endif(WIN32)
