@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
 
         auto sysTrayIcon = new QSystemTrayIcon(this);
         sysTrayIcon->setContextMenu(trayIconMenu);
-        //sysTrayIcon->setIcon(QIcon("icon.ico"));
+        sysTrayIcon->setIcon(QIcon("icon.png"));
         sysTrayIcon->show();
         connect(exitAction, &QAction::triggered, [this]() {
                 closing = true;
