@@ -56,7 +56,7 @@ static auto category_moveContract(Category &src, Category &dest, Contract &item)
     // Check if the item is in dest.
     for (auto i : dest._contracts) {
         if (i == item) {
-            throw std::runtime_error("Contract already exists in destination.");
+            return;
         }
     }
 

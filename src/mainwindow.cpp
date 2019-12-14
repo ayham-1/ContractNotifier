@@ -76,6 +76,52 @@ auto MainWindow::on_settingsBtn_clicked() -> void {
     win->show();
 }
 
+auto MainWindow::on_infoBtn_clicked() -> void {
+    if (this->_selectedContract) {
+        infoWindow *win = new infoWindow(&_db, _selectedContract, _selectedCategoryName, this);
+        win->show();
+    }
+    else if (this->_selectedCategory) {
+        categoryInfoWindow *win = new categoryInfoWindow(_selectedCategory, this);
+        win->show();
+    }
+}
+
+auto MainWindow::on_treeView_itemClicked() -> void {
+    // Reset state.
+    this->_selectedContract = nullptr;
+    this->_selectedCategory = nullptr;
+    this->infoBtn->setEnabled(false);
+    this->deleteBtn->setEnabled(false);   
+
+    // Get item selected
+    auto item = this->treeView->currentItem()->text(0);
+
+    // Check if item name is a contract name.
+    for (int i = 0; i < _db._categories.size(); i++) {
+        Category *category = &_db._categories[i];
+        if (item != QString::fromStdString(category->_name)) {
+            // Iterate over contracts.
+            for (int j = 0; j < category->_contracts.size(); j++) {
+                Contract *contract = &category->_contracts[i];
+                if (item == QString::fromStdString(contract->_name)) {
+                    // It's a contract.
+                    this->_selectedContract = contract;
+                    this->_selectedCategoryName = category->_name;
+                    this->infoBtn->setEnabled(true);
+                    this->deleteBtn->setEnabled(true);
+                }
+            }
+        }
+        else {
+            // It's a category.
+            this->_selectedCategory = category;
+            this->infoBtn->setEnabled(true);
+            this->deleteBtn->setEnabled(true);       
+        }
+    }
+}
+
 auto MainWindow::on_actionExport_triggered() -> void {
     exportWindow *win = new exportWindow(&_db, this);
     win->show();

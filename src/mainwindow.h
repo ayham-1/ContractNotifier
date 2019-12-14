@@ -14,6 +14,8 @@
 #include "importWin.h"
 #include "addContractWin.h"
 #include "addCategoryWin.h"
+#include "infoWin.h"
+#include "categoryInfoWin.h"
 
 namespace Ui {
     class mainWin;
@@ -29,6 +31,7 @@ public:
     void listDB();
 private slots:
     void on_closeBtn_clicked();
+    void on_infoBtn_clicked();
     void on_settingsBtn_clicked();
     //void onDeleteBtn_clicked();
     //void onInfoBtn_clicked();
@@ -37,12 +40,17 @@ private slots:
     void on_actionImport_triggered();
     void on_actionAdd_Contract_triggered();
     void on_actionAdd_Category_triggered();
+    void on_treeView_itemClicked();
 
 private:
     void checkDB(); // Does checks and notifies.
     bool closing = false;
     
     DB _db;
+
+    Contract *_selectedContract = nullptr;
+    Category *_selectedCategory = nullptr;
+    std::string _selectedCategoryName = "";
 };
 
 #endif // MAINWINDOW_H
