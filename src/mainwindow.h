@@ -11,6 +11,7 @@
 #include "settingsWin.h"
 #include "exportWin.h"
 #include "importWin.h"
+#include "addContractWin.h"
 
 namespace Ui {
     class mainWin;
@@ -31,6 +32,7 @@ private slots:
     void closeEvent(QCloseEvent *event) override;
     void on_actionExport_triggered();
     void on_actionImport_triggered();
+    void on_actionAdd_Contract_triggered();
 
 private:
     void checkDB(); // Does checks and notifies.

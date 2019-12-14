@@ -24,9 +24,15 @@ MainWindow::MainWindow(QWidget *parent)
                 else{
                 show();
                 activateWindow();}}});
+
+    Category category;
+    category._name = "All";
+    category._desc = "Default Category";
+    _db._categories.push_back(category);
 }
 
 MainWindow::~MainWindow() {
+    export_db_as_db(_db, "db.db");
 }
 
 auto MainWindow::closeEvent(QCloseEvent *event) -> void {
@@ -56,5 +62,11 @@ auto MainWindow::on_actionExport_triggered() -> void {
 auto MainWindow::on_actionImport_triggered() -> void {
     importWindow *win = new importWindow(&_db, this);
     win->show();
+}
+
+auto MainWindow::on_actionAdd_Contract_triggered() -> void {
+    addContractWindow *win = new addContractWindow(&_db, this);
+    win->show();
+    export_db_as_db(_db, "db.db");
 }
 
