@@ -104,6 +104,7 @@
      <string>Edit</string>
     </property>
     <addaction name="actionAdd_Contract"/>
+    <addaction name="actionAdd_Category"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -142,6 +143,11 @@
   <action name="actionAdd_Contract">
    <property name="text">
     <string>Add Contract</string>
+   </property>
+  </action>
+  <action name="actionAdd_Category">
+   <property name="text">
+    <string>Add Category</string>
    </property>
   </action>
  </widget>

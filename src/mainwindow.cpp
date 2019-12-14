@@ -70,3 +70,9 @@ auto MainWindow::on_actionAdd_Contract_triggered() -> void {
     export_db_as_db(_db, "db.db");
 }
 
+auto MainWindow::on_actionAdd_Category_triggered() -> void {
+    addCategoryWindow *win = new addCategoryWindow(&_db, this);
+    win->show();
+    export_db_as_db(_db, "db.db");
+}
+

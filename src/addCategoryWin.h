@@ -1,5 +1,5 @@
-#ifndef ADDCNTRCT_WIN_H
-#define ADDCNTRCT_WIN_H
+#ifndef ADDCATEGORY_WIN_H
+#define ADDCATEGORY_WIN_H
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
@@ -9,21 +9,21 @@
 #include <QCloseEvent>
 #include <QString>
 #include <QFileDialog>
-#include "ui_addContract.h"
+#include "ui_addCategory.h"
 #include "lib/db.h"
 #include "lib/contract.h"
 #include "lib/category.h"
 
 namespace Ui {
-    class addContractWin;
+    class addCategoryWin;
 }
 
-class addContractWindow : public QMainWindow, private Ui::addContractWin {
+class addCategoryWindow : public QMainWindow, private Ui::addCategoryWin {
     Q_OBJECT
 
 public:
-    explicit addContractWindow(DB *db, QWidget *parent = nullptr);
-    ~addContractWindow();
+    explicit addCategoryWindow(DB *db, QWidget *parent = nullptr);
+    ~addCategoryWindow();
 
 private slots:
     void on_closeBtn_clicked();
@@ -33,4 +33,4 @@ private:
     DB* _db;
 };
 
-#endif // ADDCNTRCT_WIN_H
+#endif // EXPORTWIDNOW_H

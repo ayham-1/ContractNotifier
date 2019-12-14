@@ -12,6 +12,7 @@
 #include "exportWin.h"
 #include "importWin.h"
 #include "addContractWin.h"
+#include "addCategoryWin.h"
 
 namespace Ui {
     class mainWin;
@@ -33,6 +34,7 @@ private slots:
     void on_actionExport_triggered();
     void on_actionImport_triggered();
     void on_actionAdd_Contract_triggered();
+    void on_actionAdd_Category_triggered();
 
 private:
     void checkDB(); // Does checks and notifies.
