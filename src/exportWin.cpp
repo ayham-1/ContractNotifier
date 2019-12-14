@@ -17,6 +17,6 @@ auto exportWindow::on_exportBtn_clicked() -> void {
 }
 auto exportWindow::on_browseBtn_clicked() -> void {
     QString dirname = QFileDialog::getSaveFileName(this,
-            "Export", "", ".db");
+            "Export", "", "*.db");
     this->locationBox->setText(dirname);
 }

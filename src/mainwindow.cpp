@@ -52,3 +52,9 @@ auto MainWindow::on_actionExport_triggered() -> void {
     exportWindow *win = new exportWindow(&_db, this);
     win->show();
 }
+
+auto MainWindow::on_actionImport_triggered() -> void {
+    importWindow *win = new importWindow(&_db, this);
+    win->show();
+}
+

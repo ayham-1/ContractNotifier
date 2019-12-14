@@ -11,7 +11,7 @@
 #include "category.h"
 #include "db.h"
 
-auto import_db_as_db(DB &db, const std::string &filename) -> void {
+static auto import_db_as_db(DB &db, const std::string &filename) -> void {
     std::ifstream ifs(filename);
     {
         boost::archive::text_iarchive ia(ifs);

@@ -10,6 +10,7 @@
 #include "ui_mainwindow.h"
 #include "settingsWin.h"
 #include "exportWin.h"
+#include "importWin.h"
 
 namespace Ui {
     class mainWin;
@@ -29,6 +30,7 @@ private slots:
     //void onInfoBtn_clicked();
     void closeEvent(QCloseEvent *event) override;
     void on_actionExport_triggered();
+    void on_actionImport_triggered();
 
 private:
     void checkDB(); // Does checks and notifies.
