@@ -45,6 +45,6 @@ void MainWindow::on_closeBtn_clicked() {
 }
 
 void MainWindow::on_settingsBtn_clicked() {
-    settingsWin* win = new settingsWin(this);
+    settingsWindow* win = new settingsWindow(&_db, this);
     win->show();
 }

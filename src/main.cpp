@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     db._notifier_email = "ayhamaboualfadl@gmail.com";
 
     export_db_as_db(db, "db.db");
-    notify_check(db, true, true);
+    notify_check(db, false, true);
 
     QApplication a(argc, argv);
     MainWindow w;

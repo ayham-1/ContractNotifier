@@ -29,7 +29,7 @@ struct Category {
     }
 };
 
-auto category_removeContract(Category &category, Contract &item) -> void {
+static auto category_removeContract(Category &category, Contract &item) -> void {
     // Search for the item to remove.
     for (int i = 0; i < category._contracts.size(); i++) {
         if (category._contracts[i] == item) {
@@ -40,7 +40,7 @@ auto category_removeContract(Category &category, Contract &item) -> void {
     throw std::runtime_error("Contract to remove does not exist.");
 }
 
-auto category_addContract(Category &category, Contract item) -> void {
+static auto category_addContract(Category &category, Contract item) -> void {
     // Check if the item is not already in Category.
     for (auto i : category._contracts) {
         if (i == item) {
@@ -52,7 +52,7 @@ auto category_addContract(Category &category, Contract item) -> void {
     category._contracts.push_back(item);
 }
 
-auto category_moveContract(Category &src, Category &dest, Contract &item) -> void {
+static auto category_moveContract(Category &src, Category &dest, Contract &item) -> void {
     // Check if the item is in dest.
     for (auto i : dest._contracts) {
         if (i == item) {
@@ -75,7 +75,7 @@ auto category_moveContract(Category &src, Category &dest, Contract &item) -> voi
     dest._contracts.push_back(local);
 }
 
-auto category_getContract(Category &category, std::string _name) -> Contract& {
+static auto category_getContract(Category &category, std::string _name) -> Contract& {
     for (int i = 0; i < category._contracts.size(); i++)
         if (category._contracts[i]._name == _name)
             return category._contracts[i];

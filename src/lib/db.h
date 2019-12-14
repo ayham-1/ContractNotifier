@@ -13,15 +13,19 @@ struct DB {
     std::vector<Category> _categories;
     Category _deactivatedCategory;
     std::string _notifier_email = "";
+    bool _notify_by_email = true;
+    bool _notify_by_notify = true;
 
     template<typename Archive>
         void serialize(Archive & ar, const unsigned int version) {
             ar & _categories;
             ar & _notifier_email;
+            ar & _notify_by_email;
+            ar & _notify_by_notify;
         }
 };
 
-auto  db_addCategory(DB db, Category item) -> void {
+static auto  db_addCategory(DB db, Category item) -> void {
     // Check if category is already present.
     for (auto i : db._categories) {
         if (i == item) {
@@ -33,7 +37,7 @@ auto  db_addCategory(DB db, Category item) -> void {
     db._categories.push_back(item);
 }
 
-auto db_removeCategory(DB db, Category &item) -> void {
+static auto db_removeCategory(DB db, Category &item) -> void {
     // Search for the item to remove.
     for (int i = 0; i < db._categories.size(); i++) {
         if (db._categories[i] == item) {

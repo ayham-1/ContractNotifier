@@ -39,11 +39,11 @@ struct Contract {
     }
 };
 
-auto contract_getExpiry(const Contract &contract) -> QDate {
+static auto contract_getExpiry(const Contract &contract) -> QDate {
     return (QDate::fromString(QString::fromStdString(contract._expiry), DATE_FORMAT));
 }
 
-auto contract_setExpiry(Contract &contract, QDate date) -> void {
+static auto contract_setExpiry(Contract &contract, QDate date) -> void {
     contract._expiry = date.toString(DATE_FORMAT).toUtf8().constData();
 }
 

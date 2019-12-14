@@ -31,6 +31,8 @@ private slots:
 private:
     void checkDB(); // Does checks and notifies.
     bool closing = false;
+    
+    DB _db;
 };
 
 #endif // MAINWINDOW_H
