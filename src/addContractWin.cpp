@@ -1,4 +1,5 @@
 #include "addContractWin.h"
+#include "mainwindow.h"
 
 addContractWindow::addContractWindow(DB *db,QWidget *parent)
     : QMainWindow(parent), _db(db) {
@@ -33,5 +34,6 @@ auto addContractWindow::on_addBtn_clicked() -> void {
             break;
         }
     }
+    ((MainWindow*)(this->parent()))->listDB();
     this->close();
 }

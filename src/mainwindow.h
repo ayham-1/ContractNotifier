@@ -7,6 +7,7 @@
 #include <QAction>
 #include <QMessageBox>
 #include <QCloseEvent>
+#include <QTreeWidgetItem>
 #include "ui_mainwindow.h"
 #include "settingsWin.h"
 #include "exportWin.h"
@@ -25,6 +26,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void listDB();
 private slots:
     void on_closeBtn_clicked();
     void on_settingsBtn_clicked();

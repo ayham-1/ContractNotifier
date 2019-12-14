@@ -1,4 +1,5 @@
 #include "importWin.h"
+#include "mainwindow.h"
 
 importWindow::importWindow(DB *db,QWidget *parent)
     : QMainWindow(parent), _db(db) {
@@ -19,4 +20,6 @@ auto importWindow::on_browseBtn_clicked() -> void {
     QString dirname = QFileDialog::getOpenFileName(this,
             "Import", "", "*.db");
     this->locationBox->setText(dirname);
+    ((MainWindow*)(this->parent()))->listDB();
+    this->close();
 }

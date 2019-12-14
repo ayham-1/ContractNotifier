@@ -29,11 +29,33 @@ MainWindow::MainWindow(QWidget *parent)
     category._name = "All";
     category._desc = "Default Category";
     _db._categories.push_back(category);
+
+    _db._deactivatedCategory._name = "Expired";
+    _db._deactivatedCategory._desc = "Permanent Category";
+
+    this->listDB();
 }
 
 MainWindow::~MainWindow() {
     export_db_as_db(_db, "db.db");
 }
+
+auto MainWindow::listDB() -> void {
+    this->treeView->clear();
+    auto t = new QTreeWidgetItem(QStringList() << "DB");
+    for (auto category : _db._categories) {
+        auto cattop = new QTreeWidgetItem(QStringList() << category._name.c_str());
+        for (auto contract : category._contracts) {
+            auto item = new QTreeWidgetItem(QStringList() << contract._name.c_str());
+            cattop->addChild(item);
+        }
+        t->addChild(cattop);
+    }
+    auto deactive = new QTreeWidgetItem(QStringList() << "Expired");
+    t->addChild(deactive);
+    this->treeView->addTopLevelItem(t);
+    this->treeView->expandItem(t);
+};
 
 auto MainWindow::closeEvent(QCloseEvent *event) -> void {
         if(closing) {
