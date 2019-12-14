@@ -18,10 +18,11 @@ struct DB {
 
     template<typename Archive>
         void serialize(Archive & ar, const unsigned int version) {
-            ar & _categories;
             ar & _notifier_email;
             ar & _notify_by_email;
             ar & _notify_by_notify;
+            ar & _deactivatedCategory;
+            ar & _categories;
         }
 };
 

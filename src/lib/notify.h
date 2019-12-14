@@ -34,9 +34,9 @@
 #define NOTIFICATION_CONTENT(name, expiry) \
     std::string("The contract '") + name + std::string("' expires at: ") + expiry + std::string(".");
 
-auto notify_sendEmail(const std::string &recipient_addr, const std::string &subject, const std::string &content) -> void;
+static auto notify_sendEmail(const std::string &recipient_addr, const std::string &subject, const std::string &content) -> void;
 
-auto notify_check(DB &db, bool by_email = true, bool by_notification = true) -> void {
+static auto notify_check(DB &db, bool by_email = true, bool by_notification = true) -> void {
     // iterate over contracts, and check if there is need to send.
 
     for (int i = 0; i < db._categories.size(); i++) {
@@ -87,10 +87,10 @@ auto notify_check(DB &db, bool by_email = true, bool by_notification = true) -> 
 //////////////////////////////////////
 static std::string payloadText[11];
 
-std::string dateTimeNow();
-std::string generateMessageId();
+static std::string dateTimeNow();
+static std::string generateMessageId();
 
-void setPayloadText(const std::string &to,
+static void setPayloadText(const std::string &to,
         const std::string &from,
         const std::string &cc,
         const std::string &nameFrom,
@@ -109,7 +109,7 @@ void setPayloadText(const std::string &to,
     payloadText[10] = "\r\n"; // "Check RFC5322.\r\n";
 }
 
-std::string dateTimeNow() {
+static std::string dateTimeNow() {
     const int RFC5322_TIME_LEN = 32;
     time_t t;
     struct tm *tm;
@@ -125,7 +125,7 @@ std::string dateTimeNow() {
     return ret;
 }
 
-std::string generateMessageId()
+static std::string generateMessageId()
 {
     const int MESSAGE_ID_LEN = 37;
     time_t t;
@@ -182,7 +182,7 @@ static size_t payload_source(void *ptr, size_t size, size_t nmemb, void *userp)
     return 0;
 }
 
-CURLcode sendEmail(const std::string &to,
+static CURLcode sendEmail(const std::string &to,
         const std::string &from,
         const std::string &cc,
         const std::string &nameFrom,
@@ -233,7 +233,8 @@ CURLcode sendEmail(const std::string &to,
 }
 //////////////////////////////////////
 
-auto notify_sendEmail(const std::string &recipient_addr, const std::string &subject, const std::string &content) -> void {
+static auto notify_sendEmail(const std::string &recipient_addr, const std::string &subject, const std::string &content) -> void {
+    if (recipient_addr == "") return;
         sendEmail(recipient_addr,
                 "contractnotifier@gmail.com",
                 "contractnotifier@gmail.com",

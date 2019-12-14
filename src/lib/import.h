@@ -12,11 +12,12 @@
 #include "db.h"
 
 static auto import_db_as_db(DB &db, const std::string &filename) -> void {
-    std::ifstream ifs(filename);
+    std::ifstream ifs(filename, std::ios::out);
     {
         boost::archive::text_iarchive ia(ifs);
         ia >> db;
     }
+    ifs.close();
 }
 
 #endif

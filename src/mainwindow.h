@@ -1,6 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <thread>
+#include <mutex>
+
 #include <QMainWindow>
 #include <QSystemTrayIcon>
 #include <QMenu>
@@ -8,6 +11,7 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QTreeWidgetItem>
+#include "lib/notify.h"
 #include "ui_mainwindow.h"
 #include "settingsWin.h"
 #include "exportWin.h"
@@ -16,6 +20,7 @@
 #include "addCategoryWin.h"
 #include "infoWin.h"
 #include "categoryInfoWin.h"
+#include "appinfoWin.h"
 
 namespace Ui {
     class mainWin;
@@ -34,13 +39,13 @@ private slots:
     void on_infoBtn_clicked();
     void on_settingsBtn_clicked();
     //void onDeleteBtn_clicked();
-    //void onInfoBtn_clicked();
     void closeEvent(QCloseEvent *event) override;
+    void on_treeView_itemClicked();
     void on_actionExport_triggered();
     void on_actionImport_triggered();
     void on_actionAdd_Contract_triggered();
     void on_actionAdd_Category_triggered();
-    void on_treeView_itemClicked();
+    void on_actionInfo_triggered();
 
 private:
     void checkDB(); // Does checks and notifies.
@@ -51,6 +56,8 @@ private:
     Contract *_selectedContract = nullptr;
     Category *_selectedCategory = nullptr;
     std::string _selectedCategoryName = "";
+
+    std::thread* _checkingThread = nullptr;
 };
 
 #endif // MAINWINDOW_H

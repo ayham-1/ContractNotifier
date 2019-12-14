@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+#include <iostream>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
         setupUi(this);
@@ -24,20 +25,43 @@ MainWindow::MainWindow(QWidget *parent)
                 else{
                 show();
                 activateWindow();}}});
+    
+    // Try to load from db.db file
+    try {
+       import_db_as_db(_db, "db.db");
+    } catch (...) {
+        Category category;
+        category._name = "All";
+        category._desc = "Default Category";
+        _db._categories.push_back(category);
 
-    Category category;
-    category._name = "All";
-    category._desc = "Default Category";
-    _db._categories.push_back(category);
-
-    _db._deactivatedCategory._name = "Expired";
-    _db._deactivatedCategory._desc = "Permanent Category";
-
+        _db._deactivatedCategory._name = "Expired";
+        _db._deactivatedCategory._desc = "Permanent Category"; 
+        export_db_as_db(_db, "db.db");
+    }
     this->listDB();
+    std::cout << _db._categories[0]._contracts.size() << std::endl;
+
+    // Spawn checking thread.
+    this->_checkingThread = new std::thread(&MainWindow::checkDB, this);
 }
 
 MainWindow::~MainWindow() {
     export_db_as_db(_db, "db.db");
+}
+
+auto MainWindow::checkDB() -> void {
+    std::mutex mtx;
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+        mtx.lock();
+        try {
+            notify_check(this->_db, this->_db._notify_by_email, this->_db._notify_by_notify);
+        } catch (std::exception e) {
+            std::cout << e.what() << std::endl;
+        }
+        mtx.unlock();
+    }
 }
 
 auto MainWindow::listDB() -> void {
@@ -52,6 +76,8 @@ auto MainWindow::listDB() -> void {
         t->addChild(cattop);
     }
     auto deactive = new QTreeWidgetItem(QStringList() << "Expired");
+    for (auto item : _db._deactivatedCategory._contracts)
+        deactive->addChild(new QTreeWidgetItem(QStringList() << item._name.c_str()));
     t->addChild(deactive);
     this->treeView->addTopLevelItem(t);
     this->treeView->expandItem(t);
@@ -69,6 +95,7 @@ auto MainWindow::closeEvent(QCloseEvent *event) -> void {
 
 auto MainWindow::on_closeBtn_clicked() -> void {
     hide();
+    export_db_as_db(_db, "db.db");
 }
 
 auto MainWindow::on_settingsBtn_clicked() -> void {
@@ -144,3 +171,7 @@ auto MainWindow::on_actionAdd_Category_triggered() -> void {
     export_db_as_db(_db, "db.db");
 }
 
+auto MainWindow::on_actionInfo_triggered() -> void {
+    appInfoWindow *win = new appInfoWindow(this);
+    win->show();
+}
