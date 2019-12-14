@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>categoryInfo</class>
- <widget class="QWidget" name="categoryInfo">
+ <class>categoryInfoWin</class>
+ <widget class="QWidget" name="categoryInfoWin">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,13 +13,13 @@
   <property name="windowTitle">
    <string>Category Info</string>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
      <width>349</width>
-     <height>91</height>
+     <height>95</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">

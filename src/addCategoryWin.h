@@ -33,4 +33,4 @@ private:
     DB* _db;
 };
 
-#endif // EXPORTWIDNOW_H
+#endif // ADDCATEGORY_WIN_H
