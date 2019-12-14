@@ -27,10 +27,9 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() {
-
 }
 
-void MainWindow::closeEvent(QCloseEvent *event) {
+auto MainWindow::closeEvent(QCloseEvent *event) -> void {
         if(closing) {
             event->accept();
         }
@@ -40,11 +39,16 @@ void MainWindow::closeEvent(QCloseEvent *event) {
         }
 }
 
-void MainWindow::on_closeBtn_clicked() {
+auto MainWindow::on_closeBtn_clicked() -> void {
     hide();
 }
 
-void MainWindow::on_settingsBtn_clicked() {
-    settingsWindow* win = new settingsWindow(&_db, this);
+auto MainWindow::on_settingsBtn_clicked() -> void {
+    settingsWindow *win = new settingsWindow(&_db, this);
+    win->show();
+}
+
+auto MainWindow::on_actionExport_triggered() -> void {
+    exportWindow *win = new exportWindow(&_db, this);
     win->show();
 }

@@ -31,4 +31,4 @@ private:
     DB* _db;
 };
 
-#endif // MAINWINDOW_H
+#endif // SETTINGSWIN_H

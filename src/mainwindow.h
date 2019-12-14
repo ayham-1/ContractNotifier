@@ -9,6 +9,7 @@
 #include <QCloseEvent>
 #include "ui_mainwindow.h"
 #include "settingsWin.h"
+#include "exportWin.h"
 
 namespace Ui {
     class mainWin;
@@ -27,6 +28,7 @@ private slots:
     //void onDeleteBtn_clicked();
     //void onInfoBtn_clicked();
     void closeEvent(QCloseEvent *event) override;
+    void on_actionExport_triggered();
 
 private:
     void checkDB(); // Does checks and notifies.
