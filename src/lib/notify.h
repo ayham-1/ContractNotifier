@@ -36,8 +36,9 @@
 
 static auto notify_sendEmail(const std::string &recipient_addr, const std::string &subject, const std::string &content) -> void;
 
-static auto notify_check(DB &db, bool by_email = true, bool by_notification = true) -> void {
+static auto notify_check(DB &db, bool by_email = true, bool by_notification = true) -> bool {
     // iterate over contracts, and check if there is need to send.
+    bool res = false;
 
     for (int i = 0; i < db._categories.size(); i++) {
         Category &category = db._categories[i];
@@ -58,7 +59,7 @@ static auto notify_check(DB &db, bool by_email = true, bool by_notification = tr
                                     std::string(EMAILFORMAT_CONTENT(contract._name, contract._desc,
                                             contract._expiry, contract._notify_from_months, contract._notify_from_days)));
                         } catch (std::exception &e) {
-                            std::cout << e.what();
+                            continue;
                         }
                     // notify by notification
                     if (by_notification) {
@@ -71,15 +72,18 @@ static auto notify_check(DB &db, bool by_email = true, bool by_notification = tr
 
                     // change states/switches.
                     contract._did_notify = true;
+                    res = true;
                 }
             }
             if (current_date > expiry_date) {
                 // expire the contract.
                 contract._expired = true;
                 category_moveContract(category, db._deactivatedCategory, contract);
+                res = true;
             }
         }
     }
+    return res;
 }
 
 //////////////////////////////////////

@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
         sysTrayIcon->show();
         connect(exitAction, &QAction::triggered, [this]() {
                 closing = true;
+                this->_checker->setClosing(true);
                 close();
                 });
         connect(sysTrayIcon, &QSystemTrayIcon::activated, [this](QSystemTrayIcon::ActivationReason reason) {
@@ -25,43 +26,32 @@ MainWindow::MainWindow(QWidget *parent)
                 else{
                 show();
                 activateWindow();}}});
-    
-    // Try to load from db.db file
-    try {
-       import_db_as_db(_db, "db.db");
-    } catch (...) {
-        Category category;
-        category._name = "All";
-        category._desc = "Default Category";
-        _db._categories.push_back(category);
 
-        _db._deactivatedCategory._name = "Expired";
-        _db._deactivatedCategory._desc = "Permanent Category"; 
-        export_db_as_db(_db, "db.db");
-    }
-    this->listDB();
-    std::cout << _db._categories[0]._contracts.size() << std::endl;
+        // Try to load from db.db file
+        try {
+            import_db_as_db(_db, "db.db");
+        } catch (...) {
+            Category category;
+            category._name = "All";
+            category._desc = "Default Category";
+            _db._categories.push_back(category);
 
-    // Spawn checking thread.
-    this->_checkingThread = new std::thread(&MainWindow::checkDB, this);
+            _db._deactivatedCategory._name = "Expired";
+            _db._deactivatedCategory._desc = "Permanent Category"; 
+            export_db_as_db(_db, "db.db");
+        }
+        this->listDB();
+
+        // Spawn checking thread.
+        this->_checker = new DBChecker(_db);
+        this->_checkingThread = new std::thread(&DBChecker::checkDBthread, this->_checker);
+        connect(this->_checker, SIGNAL(checkDBepoch()), this, SLOT(listDB()));
 }
 
 MainWindow::~MainWindow() {
+    this->_checker->setClosing(true);
+    this->_checkingThread->join();
     export_db_as_db(_db, "db.db");
-}
-
-auto MainWindow::checkDB() -> void {
-    std::mutex mtx;
-    while (true) {
-        std::this_thread::sleep_for(std::chrono::seconds(5));
-        mtx.lock();
-        try {
-            notify_check(this->_db, this->_db._notify_by_email, this->_db._notify_by_notify);
-        } catch (std::exception e) {
-            std::cout << e.what() << std::endl;
-        }
-        mtx.unlock();
-    }
 }
 
 auto MainWindow::listDB() -> void {
@@ -114,24 +104,70 @@ auto MainWindow::on_infoBtn_clicked() -> void {
     }
 }
 
+auto MainWindow::on_deleteBtn_clicked() -> void {
+    // Get item selected
+    auto item = this->treeView->currentItem()->text(0).toUtf8().constData();
+
+    // Check if it is the expired category.
+    if (item == "Expired") {
+       QMessageBox msgBox;
+       msgBox.setText("Can't delete the expired category.");
+       msgBox.exec();
+    }
+
+    // Check if it is a category.
+    for (int i = 0; i < _db._categories.size(); i++)
+        if (item == _db._categories[i]._name)
+            db_removeCategory(_db, _db._categories[i]);
+
+    // Check if it is in expired category.
+    for (int i = 0; i < _db._deactivatedCategory._contracts.size(); i++)
+        if (item == _db._deactivatedCategory._contracts[i]._name) {
+            category_removeContract(_db._deactivatedCategory, _db._deactivatedCategory._contracts[i]);
+            break;
+        }
+
+    // Check which category it is.
+    for (int i = 0; i < _db._categories.size(); i++)
+        for (int j = 0; j < _db._categories[i]._contracts.size(); j++)
+            if (item == _db._categories[i]._contracts[j]._name) {
+                category_removeContract(_db._categories[i], _db._categories[i]._contracts[j]);
+                break;
+            }
+
+    this->listDB();
+}
+
 auto MainWindow::on_treeView_itemClicked() -> void {
     // Reset state.
     this->_selectedContract = nullptr;
     this->_selectedCategory = nullptr;
+    this->_selectedCategoryName = "";
     this->infoBtn->setEnabled(false);
     this->deleteBtn->setEnabled(false);   
 
     // Get item selected
-    auto item = this->treeView->currentItem()->text(0);
+    auto item = this->treeView->currentItem()->text(0).toUtf8().constData();
 
+    // Check if the item is from expired category.
+    for (int i = 0; i < _db._deactivatedCategory._contracts.size(); i++) {
+        Contract *contract = &_db._deactivatedCategory._contracts[i]; 
+        if (contract->_name == item) {
+            // It's a contract.
+            this->_selectedContract = contract;
+            this->_selectedCategoryName = "Deactivated";
+            this->infoBtn->setEnabled(true);
+            this->deleteBtn->setEnabled(true);
+        }
+    }
     // Check if item name is a contract name.
     for (int i = 0; i < _db._categories.size(); i++) {
         Category *category = &_db._categories[i];
-        if (item != QString::fromStdString(category->_name)) {
+        if (item != category->_name) {
             // Iterate over contracts.
             for (int j = 0; j < category->_contracts.size(); j++) {
                 Contract *contract = &category->_contracts[i];
-                if (item == QString::fromStdString(contract->_name)) {
+                if (item == contract->_name) {
                     // It's a contract.
                     this->_selectedContract = contract;
                     this->_selectedCategoryName = category->_name;
@@ -175,3 +211,8 @@ auto MainWindow::on_actionInfo_triggered() -> void {
     appInfoWindow *win = new appInfoWindow(this);
     win->show();
 }
+
+auto MainWindow::on_update() -> void {
+    if (need_update) this->listDB();
+}
+

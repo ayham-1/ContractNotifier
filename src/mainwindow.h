@@ -11,6 +11,8 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QTreeWidgetItem>
+#include <QMessageBox>
+#include <QThread>
 #include "lib/notify.h"
 #include "ui_mainwindow.h"
 #include "settingsWin.h"
@@ -21,6 +23,7 @@
 #include "infoWin.h"
 #include "categoryInfoWin.h"
 #include "appinfoWin.h"
+#include "dbchecker.h"
 
 namespace Ui {
     class mainWin;
@@ -33,12 +36,11 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void listDB();
-private slots:
+public slots:
     void on_closeBtn_clicked();
     void on_infoBtn_clicked();
     void on_settingsBtn_clicked();
-    //void onDeleteBtn_clicked();
+    void on_deleteBtn_clicked();
     void closeEvent(QCloseEvent *event) override;
     void on_treeView_itemClicked();
     void on_actionExport_triggered();
@@ -46,10 +48,12 @@ private slots:
     void on_actionAdd_Contract_triggered();
     void on_actionAdd_Category_triggered();
     void on_actionInfo_triggered();
+    void on_update();
 
+    void listDB();
 private:
-    void checkDB(); // Does checks and notifies.
     bool closing = false;
+    bool need_update = false;
     
     DB _db;
 
@@ -57,7 +61,7 @@ private:
     Category *_selectedCategory = nullptr;
     std::string _selectedCategoryName = "";
 
-    std::thread* _checkingThread = nullptr;
+    DBChecker* _checker = nullptr;
+    std::thread *_checkingThread = nullptr;
 };
-
 #endif // MAINWINDOW_H

@@ -28,25 +28,21 @@ struct DB {
 
 static auto  db_addCategory(DB db, Category item) -> void {
     // Check if category is already present.
-    for (auto i : db._categories) {
-        if (i == item) {
-            throw std::runtime_error("Category already exists.");
-        }
-    }
+    for (auto i : db._categories)
+        if (i == item)
+            return;
 
     // Add the category.
     db._categories.push_back(item);
 }
 
-static auto db_removeCategory(DB db, Category &item) -> void {
+static auto db_removeCategory(DB &db, Category &item) -> void {
     // Search for the item to remove.
-    for (int i = 0; i < db._categories.size(); i++) {
+    for (int i = 0; i < db._categories.size(); i++)
         if (db._categories[i] == item) {
             db._categories.erase(db._categories.begin()+i);
             break;
         }
-    }
-    throw std::runtime_error("Category to remove does not exist.");
 }
 
 #endif

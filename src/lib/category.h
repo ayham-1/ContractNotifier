@@ -37,16 +37,13 @@ static auto category_removeContract(Category &category, Contract &item) -> void 
             break;
         }
     }
-    throw std::runtime_error("Contract to remove does not exist.");
 }
 
 static auto category_addContract(Category &category, Contract item) -> void {
     // Check if the item is not already in Category.
-    for (auto i : category._contracts) {
-        if (i == item) {
-            throw std::runtime_error("Contract already exists.");
-        }
-    }
+    for (auto i : category._contracts)
+        if (i == item)
+            return;
 
     // Add the contract.
     category._contracts.push_back(item);
@@ -54,11 +51,9 @@ static auto category_addContract(Category &category, Contract item) -> void {
 
 static auto category_moveContract(Category &src, Category &dest, Contract &item) -> void {
     // Check if the item is in dest.
-    for (auto i : dest._contracts) {
-        if (i == item) {
+    for (auto i : dest._contracts)
+        if (i == item)
             return;
-        }
-    }
 
     // Copy the contract to local var.
     auto local = Contract{item};
@@ -75,11 +70,11 @@ static auto category_moveContract(Category &src, Category &dest, Contract &item)
     dest._contracts.push_back(local);
 }
 
-static auto category_getContract(Category &category, std::string _name) -> Contract& {
+static auto category_getContract(Category &category, std::string _name) -> Contract* {
     for (int i = 0; i < category._contracts.size(); i++)
         if (category._contracts[i]._name == _name)
-            return category._contracts[i];
-    throw std::runtime_error("Contract does not exist.");
+            return &category._contracts[i];
+    return nullptr;
 }
 
 #endif

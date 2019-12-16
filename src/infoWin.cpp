@@ -36,21 +36,25 @@ auto infoWindow::on_applyBtn_clicked() -> void {
 
     // Get original category.
     Category *categorySrc = nullptr;
-    for (int i = 0; i < _db->_categories.size(); i++)
-        if (_category  == _db->_categories[i]._name) {
-            // Found the category.
-            categorySrc = &_db->_categories[i];
-            break;
-        }
+    if (_category == "Expired") categorySrc = &_db->_deactivatedCategory;
+    else
+        for (int i = 0; i < _db->_categories.size(); i++)
+            if (_category  == _db->_categories[i]._name) {
+                // Found the category.
+                categorySrc = &_db->_categories[i];
+                break;
+            }
     // Get destination category.
     auto category_name = this->categoryBox->currentText().toUtf8().constData();
     Category *categoryDest = nullptr;
-    for (int i = 0; i < _db->_categories.size(); i++)
-        if (category_name == _db->_categories[i]._name) {
-            // Found the category.
-            categoryDest = &_db->_categories[i];
-            break;
-        }
+    if (_category == "Expired") categorySrc = &_db->_deactivatedCategory;
+    else
+        for (int i = 0; i < _db->_categories.size(); i++)
+            if (category_name == _db->_categories[i]._name) {
+                // Found the category.
+                categoryDest = &_db->_categories[i];
+                break;
+            }
 
     category_moveContract(*categorySrc, *categoryDest, *_contract);
 
