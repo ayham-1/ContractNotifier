@@ -34,6 +34,6 @@ auto addContractWindow::on_addBtn_clicked() -> void {
             break;
         }
     }
-    ((MainWindow*)(this->parent()))->listDB();
+    ((MainWindow*)(this->parent()))->updateDB();
     this->close();
 }

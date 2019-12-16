@@ -20,6 +20,6 @@ auto importWindow::on_browseBtn_clicked() -> void {
     QString dirname = QFileDialog::getOpenFileName(this,
             "Import", "", "*.db");
     this->locationBox->setText(dirname);
-    ((MainWindow*)(this->parent()))->listDB();
+    ((MainWindow*)(this->parent()))->updateDB();
     this->close();
 }

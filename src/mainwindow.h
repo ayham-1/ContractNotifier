@@ -48,9 +48,9 @@ public slots:
     void on_actionAdd_Contract_triggered();
     void on_actionAdd_Category_triggered();
     void on_actionInfo_triggered();
-    void on_update();
 
     void listDB();
+    void updateDB();
 private:
     bool closing = false;
     bool need_update = false;

@@ -19,5 +19,5 @@ auto categoryInfoWindow::on_closeBtn_clicked() -> void {
 auto categoryInfoWindow::on_applyBtn_clicked() -> void {
     _category->_name = this->nameBox->text().toUtf8().constData();
     _category->_desc = this->descBox->text().toUtf8().constData();
-    ((MainWindow*)(this->parent()))->listDB();
+    ((MainWindow*)(this->parent()))->updateDB();
 }

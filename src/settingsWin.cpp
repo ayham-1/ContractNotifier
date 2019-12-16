@@ -35,6 +35,6 @@ auto settingsWindow::on_applyBtn_clicked() -> void {
     if (this->notifyByNotify->checkState() == Qt::Checked)
         _db->_notify_by_notify = true;
     else _db->_notify_by_notify = false;
-    ((MainWindow*)(this->parent()))->listDB();
+    ((MainWindow*)(this->parent()))->updateDB();
     this->close();
 }

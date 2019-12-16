@@ -58,5 +58,6 @@ auto infoWindow::on_applyBtn_clicked() -> void {
 
     category_moveContract(*categorySrc, *categoryDest, *_contract);
 
+    ((MainWindow*)(this->parent()))->updateDB();
     this->close();
 }

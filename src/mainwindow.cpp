@@ -38,14 +38,14 @@ MainWindow::MainWindow(QWidget *parent)
 
             _db._deactivatedCategory._name = "Expired";
             _db._deactivatedCategory._desc = "Permanent Category"; 
-            export_db_as_db(_db, "db.db");
+            this->updateDB();
         }
         this->listDB();
 
         // Spawn checking thread.
         this->_checker = new DBChecker(_db);
         this->_checkingThread = new std::thread(&DBChecker::checkDBthread, this->_checker);
-        connect(this->_checker, SIGNAL(checkDBepoch()), this, SLOT(listDB()));
+        connect(this->_checker, SIGNAL(checkDBepoch()), this, SLOT(updateDB()));
 }
 
 MainWindow::~MainWindow() {
@@ -85,7 +85,7 @@ auto MainWindow::closeEvent(QCloseEvent *event) -> void {
 
 auto MainWindow::on_closeBtn_clicked() -> void {
     hide();
-    export_db_as_db(_db, "db.db");
+    this->updateDB();
 }
 
 auto MainWindow::on_settingsBtn_clicked() -> void {
@@ -135,7 +135,7 @@ auto MainWindow::on_deleteBtn_clicked() -> void {
                 break;
             }
 
-    this->listDB();
+    this->updateDB();
 }
 
 auto MainWindow::on_treeView_itemClicked() -> void {
@@ -198,13 +198,11 @@ auto MainWindow::on_actionImport_triggered() -> void {
 auto MainWindow::on_actionAdd_Contract_triggered() -> void {
     addContractWindow *win = new addContractWindow(&_db, this);
     win->show();
-    export_db_as_db(_db, "db.db");
 }
 
 auto MainWindow::on_actionAdd_Category_triggered() -> void {
     addCategoryWindow *win = new addCategoryWindow(&_db, this);
     win->show();
-    export_db_as_db(_db, "db.db");
 }
 
 auto MainWindow::on_actionInfo_triggered() -> void {
@@ -212,7 +210,7 @@ auto MainWindow::on_actionInfo_triggered() -> void {
     win->show();
 }
 
-auto MainWindow::on_update() -> void {
-    if (need_update) this->listDB();
+auto MainWindow::updateDB() -> void {
+    this->listDB();
+    export_db_as_db(_db, "db.db");
 }
-
