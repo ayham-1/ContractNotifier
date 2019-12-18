@@ -2,6 +2,8 @@
 #define NOTIFY_H
 
 #include <ctime>
+#include <thread>
+
 #include <QDate>
 #include <vector>
 #include <string>
@@ -64,7 +66,7 @@ static auto notify_check(DB &db, bool by_email = true, bool by_notification = tr
                     // notify by notification
                     if (by_notification) {
 #ifdef __WIN32__
-                        system((std::string("notifu /p") + NOTIFICATION_SUBJECT(contract._name) + std::string(" /m") + NOTIFICATION_SUBJECT(contract._expiry)).c_str());
+                        system((std::string("notifu /p ") + NOTIFICATION_SUBJECT(contract._name) + std::string(" /m ") + NOTIFICATION_SUBJECT(contract._expiry)).c_str());
 #elif defined(__LINUX__)
                         system((std::string("notify-send \"") + NOTIFICATION_SUBJECT(contract._name) + std::string("\" \"") + NOTIFICATION_SUBJECT(contract._expiry) + std::string("\"")).c_str());
 #endif
@@ -186,6 +188,10 @@ static size_t payload_source(void *ptr, size_t size, size_t nmemb, void *userp)
     return 0;
 }
 
+static size_t cust_write_data(void *buffer, size_t size, size_t nmemb, void *userp) {
+       return size * nmemb;
+}
+
 static CURLcode sendEmail(const std::string &to,
         const std::string &from,
         const std::string &cc,
@@ -207,6 +213,8 @@ static CURLcode sendEmail(const std::string &to,
     setPayloadText(to, from, cc, nameFrom, subject, body);
 
     if (curl) {
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, cust_write_data);
+        curl_easy_setopt (curl, CURLOPT_VERBOSE, 0L); // 0 disable messages
         curl_easy_setopt(curl, CURLOPT_USERNAME,     from    .c_str());
         curl_easy_setopt(curl, CURLOPT_PASSWORD,     password.c_str());
         curl_easy_setopt(curl, CURLOPT_URL,          url     .c_str());
@@ -239,14 +247,11 @@ static CURLcode sendEmail(const std::string &to,
 
 static auto notify_sendEmail(const std::string &recipient_addr, const std::string &subject, const std::string &content) -> void {
     if (recipient_addr == "") return;
-        sendEmail(recipient_addr,
-                "contractnotifier@gmail.com",
-                "contractnotifier@gmail.com",
-                "ContractNotifier",
-                subject,
-                content,
-                "smtp.gmail.com:587",
-                EMAIL_PASSWORD);
+    std::string email = "contractnotifier@gmail.com";
+    std::string smtp = "smtp.gmail.com:587";
+    std::string name = "ContractNotifier";
+    std::string pass = EMAIL_PASSWORD;
+    sendEmail(recipient_addr, email, email, name, subject, content, smtp, pass);
 }
 
 #endif
