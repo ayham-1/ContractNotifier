@@ -1,3 +1,0 @@
-[submodule "vendor/mail"]
-	path = vendor/mail
-	url = https://github.com/karastojko/mailio.git
