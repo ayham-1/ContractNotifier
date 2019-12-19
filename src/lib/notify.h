@@ -66,7 +66,7 @@ static auto notify_check(DB &db, bool by_email = true, bool by_notification = tr
                     // notify by notification
                     if (by_notification) {
 #ifdef __WIN32__
-                        system((std::string("notifu /p ") + NOTIFICATION_SUBJECT(contract._name) + std::string(" /m ") + NOTIFICATION_SUBJECT(contract._expiry)).c_str());
+                        system((std::string("notifu /p \"") + NOTIFICATION_SUBJECT(contract._name) + std::string("\" /m \"") + NOTIFICATION_SUBJECT(contract._expiry)).c_str() + std::string("\""));
 #elif defined(__LINUX__)
                         system((std::string("notify-send \"") + NOTIFICATION_SUBJECT(contract._name) + std::string("\" \"") + NOTIFICATION_SUBJECT(contract._expiry) + std::string("\"")).c_str());
 #endif
