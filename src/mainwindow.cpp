@@ -147,10 +147,13 @@ auto MainWindow::on_treeView_itemClicked() -> void {
     this->_selectedCategoryName = "";
     this->infoBtn->setEnabled(false);
     this->deleteBtn->setEnabled(false);   
-    std::cout << "Hello";
 
     // Get item selected
+#ifdef __LINUX__
     auto item = this->treeView->currentItem()->text(0).toUtf8().constData();
+#elif defined(__WIN32__)
+    auto item = this->treeView->currentItem()->text(0).toLocal8Bit().constData();
+#endif
 
     // Check if the item is from expired category.
     for (int i = 0; i < _db._deactivatedCategory._contracts.size(); i++) {

@@ -44,7 +44,11 @@ static auto contract_getExpiry(const Contract &contract) -> QDate {
 }
 
 static auto contract_setExpiry(Contract &contract, QDate date) -> void {
+#ifdef __LINUX__
     contract._expiry = date.toString(DATE_FORMAT).toUtf8().constData();
+#elif defined(__WIN32__)
+    contract._expiry = date.toString(DATE_FORMAT).toLocal8Bit().constData();
+#endif
 }
 
 
