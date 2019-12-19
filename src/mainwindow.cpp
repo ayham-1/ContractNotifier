@@ -46,6 +46,8 @@ MainWindow::MainWindow(QWidget *parent)
         this->_checker = new DBChecker(_db);
         this->_checkingThread = new std::thread(&DBChecker::checkDBthread, this->_checker);
         connect(this->_checker, SIGNAL(checkDBepoch()), this, SLOT(updateDB()));
+
+        this->treeView->setSelectionMode(QAbstractItemView::SingleSelection);
 }
 
 MainWindow::~MainWindow() {
@@ -145,6 +147,7 @@ auto MainWindow::on_treeView_itemClicked() -> void {
     this->_selectedCategoryName = "";
     this->infoBtn->setEnabled(false);
     this->deleteBtn->setEnabled(false);   
+    std::cout << "Hello";
 
     // Get item selected
     auto item = this->treeView->currentItem()->text(0).toUtf8().constData();
