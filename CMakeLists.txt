@@ -7,7 +7,7 @@ set(CMAKE_AUTOUIC ON)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-SET(CMAKE_CXX_FLAGS -pthread)
+set(CMAKE_CXX_FLAGS -pthread)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
@@ -79,3 +79,9 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy
 	${CMAKE_SOURCE_DIR}/res/icon.png
 	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/icon.png)
+add_custom_command(
+	TARGET contractNotifier POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy
+	${CMAKE_SOURCE_DIR}/vendor/notifu.exe
+	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/notifu.exe)
+
