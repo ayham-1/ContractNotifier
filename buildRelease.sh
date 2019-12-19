@@ -2,5 +2,5 @@
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j9
+make -j${1:1}
 cd ..

@@ -140,7 +140,7 @@ auto MainWindow::on_deleteBtn_clicked() -> void {
     this->updateDB();
 }
 
-auto MainWindow::on_treeView_itemClicked() -> void {
+auto MainWindow::on_treeView_itemClicked(QTreeWidgetItem* _item, int col) -> void {
     // Reset state.
     this->_selectedContract = nullptr;
     this->_selectedCategory = nullptr;
@@ -149,11 +149,7 @@ auto MainWindow::on_treeView_itemClicked() -> void {
     this->deleteBtn->setEnabled(false);   
 
     // Get item selected
-#ifdef __LINUX__
-    auto item = this->treeView->currentItem()->text(0).toUtf8().constData();
-#elif defined(__WIN32__)
-    auto item = this->treeView->currentItem()->text(0).toLocal8Bit().constData();
-#endif
+    auto item = _item->text(0).toStdString();
 
     // Check if the item is from expired category.
     for (int i = 0; i < _db._deactivatedCategory._contracts.size(); i++) {

@@ -42,7 +42,7 @@ public slots:
     void on_settingsBtn_clicked();
     void on_deleteBtn_clicked();
     void closeEvent(QCloseEvent *event) override;
-    void on_treeView_itemClicked();
+    void on_treeView_itemClicked(QTreeWidgetItem* _item, int column);
     void on_actionExport_triggered();
     void on_actionImport_triggered();
     void on_actionAdd_Contract_triggered();
