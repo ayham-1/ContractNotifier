@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 
-#include <iostream>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
         setupUi(this);
@@ -38,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
 
             _db._deactivatedCategory._name = "Expired";
             _db._deactivatedCategory._desc = "Permanent Category"; 
+
             this->updateDB();
         }
         this->listDB();
@@ -97,6 +97,10 @@ auto MainWindow::on_searchBox_textChanged(const QString &text) -> void {
     }
 }
 
+auto MainWindow::on_clearBtn_clicked() -> void {
+    this->searchBox->clear();
+}
+
 auto MainWindow::closeEvent(QCloseEvent *event) -> void {
         if(closing) {
             event->accept();
@@ -106,6 +110,9 @@ auto MainWindow::closeEvent(QCloseEvent *event) -> void {
             event->ignore();
         }
 }
+auto MainWindow::on_actionExit_triggered() -> void {
+    this->close();
+}
 
 auto MainWindow::on_closeBtn_clicked() -> void {
     hide();
@@ -113,6 +120,11 @@ auto MainWindow::on_closeBtn_clicked() -> void {
 }
 
 auto MainWindow::on_settingsBtn_clicked() -> void {
+    settingsWindow *win = new settingsWindow(&_db, this);
+    win->show();
+}
+
+auto MainWindow::on_actionSettings_triggered() -> void {
     settingsWindow *win = new settingsWindow(&_db, this);
     win->show();
 }

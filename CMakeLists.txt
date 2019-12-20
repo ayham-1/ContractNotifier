@@ -73,6 +73,19 @@ if (WIN32)
 	target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} CURL::libcurl)
 endif(WIN32)
 
+# examples
+add_executable(dataBenchmark "examples/dataBenchmark.cpp")
+target_link_libraries(dataBenchmark Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} ${CURL_LIBRARIES})
+if (WIN32)
+	target_link_libraries(dataBenchmark Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} CURL::libcurl)
+endif(WIN32)
+
+add_executable(searchBenchmark "examples/searchBenchmark.cpp")
+target_link_libraries(searchBenchmark Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} ${CURL_LIBRARIES})
+if (WIN32)
+	target_link_libraries(searchBenchmark Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} CURL::libcurl)
+endif(WIN32)
+
 # res files:
 add_custom_command(
 	TARGET contractNotifier POST_BUILD
@@ -84,4 +97,3 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy
 	${CMAKE_SOURCE_DIR}/vendor/notifu.exe
 	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/notifu.exe)
-

@@ -14,7 +14,7 @@
    <string>Contract Notifier</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -30,9 +30,9 @@
         <widget class="QLineEdit" name="searchBox"/>
        </item>
        <item>
-        <widget class="QPushButton" name="searchBtn">
+        <widget class="QPushButton" name="clearBtn">
          <property name="text">
-          <string>Search</string>
+          <string>Clear</string>
          </property>
         </widget>
        </item>

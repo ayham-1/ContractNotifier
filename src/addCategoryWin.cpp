@@ -14,6 +14,21 @@ auto addCategoryWindow::on_closeBtn_clicked() -> void {
 }
 
 auto addCategoryWindow::on_addBtn_clicked() -> void {
+    // Check if name is empty.
+    if (this->nameBox->text().toStdString() == "") {
+        QMessageBox msgBox;
+        msgBox.setText("Name of contract can not be empty!");
+        msgBox.exec();
+        return;
+    }   
+    // Check if name is already there.
+    if (!db_isNameAvaliable(*_db, this->nameBox->text().toStdString())) {
+        QMessageBox msgBox;
+        msgBox.setText("Name is already taken!");
+        msgBox.exec();
+        return;
+    }
+
     // Make category
     Category category;
     category._name = this->nameBox->text().toUtf8().constData();

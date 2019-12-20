@@ -2,6 +2,7 @@
 #define ADDCNTRCT_WIN_H
 
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QAction>

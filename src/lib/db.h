@@ -29,6 +29,23 @@ struct DB {
         }
 };
 
+static auto db_isNameAvaliable(const DB &db, const std::string &str) -> bool {
+    // Iterate over deactivated category.
+    if (str == "Expired") return false;
+    for (auto c : db._deactivatedCategory._contracts)
+        if (c._name == str) return false;
+
+    // Iterate over categories names.
+    for (auto c : db._categories)
+        if (c._name == str) return false;
+
+    // Iterate over contracts names.
+    for (auto cat : db._categories)
+        for (auto cont : cat._contracts)
+            if (cont._name == str) return false;
+    return true;
+}
+
 static auto db_search_getCorrectness(const std::string &str, const Contract &contract) -> int {
     int val = 0;
     if (contract._name.size() < str.size())
