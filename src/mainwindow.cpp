@@ -48,9 +48,12 @@ MainWindow::MainWindow(QWidget *parent)
         connect(this->_checker, SIGNAL(checkDBepoch()), this, SLOT(updateDB()));
 
         this->treeView->setSelectionMode(QAbstractItemView::SingleSelection);
+
+        db_makeList(this->_db);
 }
 
 MainWindow::~MainWindow() {
+    db_cleanList(this->_db);
     this->_checker->setClosing(true);
     this->_checkingThread->join();
     export_db_as_db(_db, "db.db");
@@ -74,6 +77,25 @@ auto MainWindow::listDB() -> void {
     this->treeView->addTopLevelItem(t);
     this->treeView->expandItem(t);
 };
+
+auto MainWindow::on_searchBox_textChanged(const QString &text) -> void {
+    auto str = text.toStdString();
+    if (str == "") {
+        this->listDB();
+    }
+    else {
+        db_search_sort(this->_db, str);
+        // Print contract list to screen.
+        this->treeView->clear();
+        auto t = new QTreeWidgetItem(QStringList() << "Search Results");
+        for (auto contract : *(this->_db._contractList)) {
+            auto item = new QTreeWidgetItem(QStringList() << contract->_name.c_str());
+            t->addChild(item);
+        }
+        this->treeView->addTopLevelItem(t);
+        this->treeView->expandItem(t);
+    }
+}
 
 auto MainWindow::closeEvent(QCloseEvent *event) -> void {
         if(closing) {
@@ -108,7 +130,7 @@ auto MainWindow::on_infoBtn_clicked() -> void {
 
 auto MainWindow::on_deleteBtn_clicked() -> void {
     // Get item selected
-    auto item = this->treeView->currentItem()->text(0).toUtf8().constData();
+    auto item = this->treeView->currentItem()->text(0).toStdString();
 
     // Check if it is the expired category.
     if (item == "Expired") {
@@ -138,6 +160,7 @@ auto MainWindow::on_deleteBtn_clicked() -> void {
             }
 
     this->updateDB();
+    db_makeList(this->_db);
 }
 
 auto MainWindow::on_treeView_itemClicked(QTreeWidgetItem* _item, int col) -> void {

@@ -20,5 +20,6 @@ auto addCategoryWindow::on_addBtn_clicked() -> void {
     category._desc = this->descBox->text().toUtf8().constData();
     _db->_categories.push_back(category);
     ((MainWindow*)(this->parent()))->updateDB();
+    db_makeList(*(this->_db));
     this->close();
 }

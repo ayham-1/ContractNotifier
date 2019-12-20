@@ -35,5 +35,6 @@ auto addContractWindow::on_addBtn_clicked() -> void {
         }
     }
     ((MainWindow*)(this->parent()))->updateDB();
+    db_makeList(*(this->_db));
     this->close();
 }

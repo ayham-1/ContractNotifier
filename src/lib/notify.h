@@ -3,6 +3,7 @@
 
 #include <ctime>
 #include <thread>
+#include <mutex>
 
 #include <QDate>
 #include <vector>
@@ -73,14 +74,20 @@ static auto notify_check(DB &db, bool by_email = true, bool by_notification = tr
                     }
 
                     // change states/switches.
+                    std::mutex mtx;
+                    mtx.lock();
                     contract._did_notify = true;
                     res = true;
+                    mtx.unlock();
                 }
             }
             if (current_date > expiry_date) {
                 // expire the contract.
+                std::mutex mtx;
+                mtx.lock();
                 contract._expired = true;
                 category_moveContract(category, db._deactivatedCategory, contract);
+                mtx.unlock();
                 res = true;
             }
         }

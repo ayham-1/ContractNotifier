@@ -43,6 +43,7 @@ public slots:
     void on_deleteBtn_clicked();
     void closeEvent(QCloseEvent *event) override;
     void on_treeView_itemClicked(QTreeWidgetItem* _item, int column);
+    void on_searchBox_textChanged(const QString &text);
     void on_actionExport_triggered();
     void on_actionImport_triggered();
     void on_actionAdd_Contract_triggered();
