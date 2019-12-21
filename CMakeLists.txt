@@ -70,6 +70,7 @@ include_directories("." "src/")
 add_executable(contractNotifier ${ui} ${hdrs} ${srcs})
 target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} ${CURL_LIBRARIES})
 if (WIN32)
+	set_target_properties(contractNotifier PROPERTIES WIN32_EXECUTABLE TRUE)
 	target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} CURL::libcurl)
 endif(WIN32)
 
