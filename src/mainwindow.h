@@ -3,6 +3,7 @@
 
 #include <thread>
 #include <mutex>
+#include <fstream>
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>

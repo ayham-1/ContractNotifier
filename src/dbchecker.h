@@ -18,15 +18,16 @@ class DBChecker : public QObject {
     Q_OBJECT
 
 public:
-        explicit DBChecker(DB &db, QObject *parent = 0) : QObject(parent), _db(db) {}    
+        explicit DBChecker(DB *db, QObject *parent = 0) : QObject(parent), _db(db) {}    
 
         void setClosing(bool val) {closing = val;}
         void checkDBthread();
+        void checkDBiter();
 signals:    
         void checkDBepoch();
 
 private:
-        DB &_db;
+        DB *_db;
         bool closing = false;
 };
 #endif // DBCHECKER_H
