@@ -37,7 +37,7 @@
     std::string("Contract with name '") + name + std::string("' is near ending.")
 
 #define NOTIFICATION_CONTENT(name, expiry) \
-    std::string("The contract '") + name + std::string("' expires at: ") + expiry + std::string(".");
+    std::string("The contract '") + name + std::string("' expires at: ") + expiry + std::string(".")
 
 static auto notify_sendEmail(const std::string &recipient_addr, const std::string &subject, const std::string &content) -> void;
 
@@ -74,14 +74,14 @@ static auto notify_check(DB &db, bool by_email = true, bool by_notification = tr
 			PROCESS_INFORMATION processInfo;
 			std::string cmd = std::string("notifu") + std::string(" /p \"")
 					 + NOTIFICATION_SUBJECT(contract._name) + std::string("\" /m \"") 
-					 + NOTIFICATION_SUBJECT(contract._expiry) + std::string("\"");
+					 + NOTIFICATION_CONTENT(contract._name, contract._expiry) + std::string("\"");
 			if (CreateProcess(NULL, const_cast<char*>(cmd.c_str()), NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo)) {
 				WaitForSingleObject(processInfo.hProcess, INFINITE);
 				CloseHandle(processInfo.hProcess);
 				CloseHandle(processInfo.hThread);
 			}
 #elif defined(__LINUX__)
-                        system((std::string("notify-send \"") + NOTIFICATION_SUBJECT(contract._name) + std::string("\" \"") + NOTIFICATION_SUBJECT(contract._expiry) + std::string("\"")).c_str());
+                        system((std::string("notify-send \"") + NOTIFICATION_SUBJECT(contract._name) + std::string("\" \"") + NOTIFICATION_CONTENT(contract._name, contract._expiry) + std::string("\"")).c_str());
 #endif
                     }
 
@@ -110,7 +110,7 @@ static auto notify_check(DB &db, bool by_email = true, bool by_notification = tr
 //////////////////////////////////////
 ///// Copied from somewhere
 //////////////////////////////////////
-static std::string payloadText[11];
+static std::string payloadText[10];
 
 static std::string dateTimeNow();
 static std::string generateMessageId();
@@ -124,14 +124,13 @@ static void setPayloadText(const std::string &to,
     payloadText[ 0] = "Date: "  + dateTimeNow();
     payloadText[ 1] = "To: <"   + to   + ">\r\n";
     payloadText[ 2] = "From: <" + from + "> (" + nameFrom + ")\r\n";
-    payloadText[ 3] = "Cc: <"   + cc   + "> (" + nameFrom + ")\r\n";
-    payloadText[ 4] = "Message-ID: <" + generateMessageId() + "@" + from.substr(from.find('@') + 1) + ">\r\n";
-    payloadText[ 5] = "Subject: " + subject + "\r\n";
-    payloadText[ 6] = "\r\n";
-    payloadText[ 7] = body + "\r\n";
-    payloadText[ 8] = "\r\n";
-    payloadText[ 9] = "\r\n"; // "It could be a lot of lines, could be MIME encoded, whatever.\r\n";
-    payloadText[10] = "\r\n"; // "Check RFC5322.\r\n";
+    payloadText[ 3] = "Message-ID: <" + generateMessageId() + "@" + from.substr(from.find('@') + 1) + ">\r\n";
+    payloadText[ 4] = "Subject: " + subject + "\r\n";
+    payloadText[ 5] = "\r\n";
+    payloadText[ 6] = body + "\r\n";
+    payloadText[ 7] = "\r\n";
+    payloadText[ 8] = "\r\n"; // "It could be a lot of lines, could be MIME encoded, whatever.\r\n";
+    payloadText[ 9] = "\r\n"; // "Check RFC5322.\r\n";
 }
 
 static std::string dateTimeNow() {
@@ -181,11 +180,11 @@ static size_t payload_source(void *ptr, size_t size, size_t nmemb, void *userp)
 
     static const char *pt[12] = {};
 
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < 10; ++i) {
         pt[i] = payloadText[i].c_str();
     }
 
-    pt[11] = NULL;
+    pt[10] = NULL;
 
     struct upload_status *upload_ctx = (struct upload_status *)userp;
     const char *data;

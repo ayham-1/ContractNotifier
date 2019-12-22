@@ -248,7 +248,7 @@ auto MainWindow::on_actionInfo_triggered() -> void {
 }
 
 auto MainWindow::updateDB() -> void {
-    std::thread iter(&DBChecker::checkDBiter, this->_checker);
+    std::thread *iter = new std::thread(&DBChecker::checkDBiter, this->_checker);
     this->listDB();
     export_db_as_db(_db, "db.db");
 }
