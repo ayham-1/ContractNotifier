@@ -3,7 +3,6 @@
 
 #include <thread>
 #include <mutex>
-#include <fstream>
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
@@ -13,7 +12,7 @@
 #include <QCloseEvent>
 #include <QTreeWidgetItem>
 #include <QMessageBox>
-#include <QThread>
+#include <QFile>
 #include "lib/notify.h"
 #include "ui_mainwindow.h"
 #include "settingsWin.h"

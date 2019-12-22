@@ -4,8 +4,9 @@
 #include <ctime>
 #include <thread>
 #include <mutex>
+#ifdef __WINDOWS__
 #include <windows.h>
-#include <shellapi.h>
+#endif
 
 #include <QDate>
 #include <vector>

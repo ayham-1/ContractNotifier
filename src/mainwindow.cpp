@@ -27,8 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
                 activateWindow();}}});
 
         // Try to load from db.db file
-        std::ifstream f("db.db");
-        if (f.good())
+        if (QFile::exists("db.db"))
             import_db_as_db(_db, "db.db");
         else {
             Category category;
@@ -40,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent)
             _db._deactivatedCategory._desc = "Permanent Category"; 
         }
         this->_checker = new DBChecker(&_db);
-        f.close();
         this->updateDB();
 
         // Spawn checking thread.
@@ -248,7 +246,7 @@ auto MainWindow::on_actionInfo_triggered() -> void {
 }
 
 auto MainWindow::updateDB() -> void {
-    std::thread iter(&DBChecker::checkDBiter, this->_checker);
+    std::thread *iter = new std::thread(&DBChecker::checkDBiter, this->_checker);
     this->listDB();
     export_db_as_db(_db, "db.db");
 }
