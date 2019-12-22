@@ -10,7 +10,7 @@
 #include <QCloseEvent>
 #include <QTreeWidgetItem>
 #include <QMessageBox>
-#include <QThread>
+#include <thread>
 #include "lib/db.h"
 #include "lib/notify.h"
 

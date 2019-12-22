@@ -55,8 +55,8 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow() {
     db_cleanList(this->_db);
     this->_checker->setClosing(true);
-    this->_checkingThread->join();
     export_db_as_db(_db, "db.db");
+    exit(0);
 }
 
 auto MainWindow::listDB() -> void {
@@ -248,7 +248,7 @@ auto MainWindow::on_actionInfo_triggered() -> void {
 }
 
 auto MainWindow::updateDB() -> void {
-    this->_checker->checkDBiter();
+    std::thread iter(&DBChecker::checkDBiter, this->_checker);
     this->listDB();
     export_db_as_db(_db, "db.db");
 }

@@ -4,6 +4,8 @@
 #include <ctime>
 #include <thread>
 #include <mutex>
+#include <windows.h>
+#include <shellapi.h>
 
 #include <QDate>
 #include <vector>
@@ -67,7 +69,17 @@ static auto notify_check(DB &db, bool by_email = true, bool by_notification = tr
                     // notify by notification
                     if (by_notification) {
 #ifdef __WIN32__
-                        system((std::string("notifu /p \"") + NOTIFICATION_SUBJECT(contract._name) + std::string("\" /m \"") + NOTIFICATION_SUBJECT(contract._expiry) + std::string("\"")).c_str());
+			STARTUPINFO info={sizeof(info)};
+			ZeroMemory(&info, sizeof(info));
+			PROCESS_INFORMATION processInfo;
+			std::string cmd = std::string("notifu") + std::string(" /p \"")
+					 + NOTIFICATION_SUBJECT(contract._name) + std::string("\" /m \"") 
+					 + NOTIFICATION_SUBJECT(contract._expiry) + std::string("\"");
+			if (CreateProcess(NULL, const_cast<char*>(cmd.c_str()), NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo)) {
+				WaitForSingleObject(processInfo.hProcess, INFINITE);
+				CloseHandle(processInfo.hProcess);
+				CloseHandle(processInfo.hThread);
+			}
 #elif defined(__LINUX__)
                         system((std::string("notify-send \"") + NOTIFICATION_SUBJECT(contract._name) + std::string("\" \"") + NOTIFICATION_SUBJECT(contract._expiry) + std::string("\"")).c_str());
 #endif
