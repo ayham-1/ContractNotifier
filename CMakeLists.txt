@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 project("ContractNotifier")
 
+set(VERSION_MAJOR 1)
+set(VERSION_MINOR 0)
+set(VERSION_PATCH 0)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -8,6 +12,8 @@ set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(CMAKE_CXX_FLAGS -pthread)
+
+include(InstallRequiredSystemLibraries)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
@@ -100,3 +106,23 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy
 	${CMAKE_SOURCE_DIR}/vendor/notifu.exe
 	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/notifu.exe)
+
+# Install stuff
+install(TARGETS contractNotifier
+	RUNTIME DESTINATION "bin"
+	LIBRARY DESTINATION "lib"
+	ARCHIVE DESTINATION "lib")
+install(DIRECTORY "res" DESTINATION bin)
+install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION bin COMPONENT Libraries)
+
+# Package Generator
+set(CPACK_PACKAGE_DESCRIPTION "A Contract notifier application")
+set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
+set(CPACK_PACKAGE_VENDOR "altffour")
+set(CPACK_PACKAGE_CONTACT "ayhamaboualfadl@gmail.com")
+set(CPACK_PACKAGE_FILE_NAME contractNotifier)
+set(CPACK_NSIS_CREATE_ICONS_EXTRA
+	"CreateShortCut '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\ContractNotifier.lnk' '$INSTDIR\\\\contractNotifier.exe'")
+include(CPack)
