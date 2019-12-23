@@ -133,6 +133,6 @@ set(CPACK_NSIS_CREATE_ICONS_EXTRA
 set(CPACK_NSIS_DELETE_ICONS_EXTRA
 	"Delete '$SMPROGRAMS\\\\$START_MENU\\\\ContractNotifier.lnk'")
 set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS 
-	"CreateShortCut \\\"$DESKTOP\\\\ContractNotifier.lnk\\\" \\\"$INSTDIR\\\\bin\\\\contractNotifier.exe\\\"")
+	"CreateShortCut \\\"$DESKTOP\\\\ContractNotifier.lnk\\\" \\\"$INSTDIR\\\\contractNotifier.exe\\\"")
 set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "Delete \\\"$DESKTOP\\\\ContractNotifier.lnk\\\"")
 include(CPack)
