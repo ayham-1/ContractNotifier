@@ -73,7 +73,7 @@ file(GLOB_RECURSE srcs "src/*.cpp")
 file(GLOB_RECURSE ui "src/*.ui")
 include_directories("." "src/")
 
-add_executable(contractNotifier ${ui} ${hdrs} ${srcs})
+add_executable(contractNotifier ${ui} ${hdrs} ${srcs} resources.rc)
 target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} ${CURL_LIBRARIES})
 if (WIN32)
 	if (CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -109,11 +109,15 @@ add_custom_command(
 
 # Install stuff
 install(TARGETS contractNotifier
-	RUNTIME DESTINATION "bin"
-	LIBRARY DESTINATION "lib"
-	ARCHIVE DESTINATION "lib")
-install(DIRECTORY "res" DESTINATION bin)
+	RUNTIME DESTINATION "."
+	LIBRARY DESTINATION "."
+	ARCHIVE DESTINATION ".")
+install(DIRECTORY "res/" DESTINATION .)
+install(DIRECTORY "vendor/" DESTINATION .)
 install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION bin COMPONENT Libraries)
+install(DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/
+	DESTINATION .
+	FILES_MATCHING PATTERN "*.dll")
 
 # Package Generator
 set(CPACK_PACKAGE_DESCRIPTION "A Contract notifier application")
@@ -125,4 +129,9 @@ set(CPACK_PACKAGE_CONTACT "ayhamaboualfadl@gmail.com")
 set(CPACK_PACKAGE_FILE_NAME contractNotifier)
 set(CPACK_NSIS_CREATE_ICONS_EXTRA
 	"CreateShortCut '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\ContractNotifier.lnk' '$INSTDIR\\\\contractNotifier.exe'")
+set(CPACK_NSIS_DELETE_ICONS_EXTRA
+	"Delete '$SMPROGRAMS\\\\$START_MENU\\\\SomeName.lnk'")
+set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS 
+	"CreateShortCut \\\"$DESKTOP\\\\${EWS_APP_NAME}.lnk\\\" \\\"$INSTDIR\\\\bin\\\\${EXE_TARGET_NAME}.exe\\\"")
+set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "Delete \\\"$DESKTOP\\\\${EWS_APP_NAME}.lnk\\\"")
 include(CPack)
