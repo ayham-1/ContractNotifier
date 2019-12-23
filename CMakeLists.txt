@@ -126,12 +126,13 @@ set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
 set(CPACK_PACKAGE_VENDOR "altffour")
 set(CPACK_PACKAGE_CONTACT "ayhamaboualfadl@gmail.com")
+set (CPACK_NSIS_MODIFY_PATH "ON")
 set(CPACK_PACKAGE_FILE_NAME contractNotifier)
 set(CPACK_NSIS_CREATE_ICONS_EXTRA
 	"CreateShortCut '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\ContractNotifier.lnk' '$INSTDIR\\\\contractNotifier.exe'")
 set(CPACK_NSIS_DELETE_ICONS_EXTRA
-	"Delete '$SMPROGRAMS\\\\$START_MENU\\\\SomeName.lnk'")
+	"Delete '$SMPROGRAMS\\\\$START_MENU\\\\ContractNotifier.lnk'")
 set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS 
-	"CreateShortCut \\\"$DESKTOP\\\\${EWS_APP_NAME}.lnk\\\" \\\"$INSTDIR\\\\bin\\\\${EXE_TARGET_NAME}.exe\\\"")
-set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "Delete \\\"$DESKTOP\\\\${EWS_APP_NAME}.lnk\\\"")
+	"CreateShortCut \\\"$DESKTOP\\\\ContractNotifier.lnk\\\" \\\"$INSTDIR\\\\bin\\\\contractNotifier.exe\\\"")
+set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "Delete \\\"$DESKTOP\\\\ContractNotifier.lnk\\\"")
 include(CPack)
