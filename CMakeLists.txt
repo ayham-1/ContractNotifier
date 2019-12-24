@@ -82,6 +82,19 @@ if (WIN32)
 	target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} CURL::libcurl)
 endif(WIN32)
 
+add_custom_command(TARGET contractNotifier POST_BUILD
+	COMMAND "${CMAKE_COMMAND}" -E
+	env PATH="${_qt_bin_dir}" "${WINDEPLOYQT_EXECUTABLE}"
+	"$<TARGET_FILE:contractNotifier>"
+	COMMENT "Running windeployqt...")
+
+# Retrieve the absolute path to qmake and then use that path to find
+# the binaries
+get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
+get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
+find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
+
 # examples
 add_executable(dataBenchmark "examples/dataBenchmark.cpp")
 target_link_libraries(dataBenchmark Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} ${CURL_LIBRARIES})
