@@ -26,7 +26,7 @@ if(MSVC)
 		string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 	else()
 		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W4 /EHsc")
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /SUBSYSTEM:WINDOWS /W4 /EHsc")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /W4 /EHsc")
 	endif()
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 	# GNU compilers
@@ -78,6 +78,7 @@ target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serializati
 if (WIN32)
 	if (CMAKE_BUILD_TYPE STREQUAL "Release")
 		set_target_properties(contractNotifier PROPERTIES WIN32_EXECUTABLE TRUE)
+		set_target_properties(your_executable PROPERTIES LINK_FLAGS    "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\" /SUBSYSTEM:WINDOWS")
 	endif(CMAKE_BUILD_TYPE STREQUAL "Release")
 	target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} CURL::libcurl)
 endif(WIN32)
@@ -127,7 +128,7 @@ install(TARGETS contractNotifier
 	ARCHIVE DESTINATION ".")
 install(DIRECTORY "res/" DESTINATION .)
 install(DIRECTORY "vendor/" DESTINATION .)
-install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION bin COMPONENT Libraries)
+install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "." COMPONENT Libraries)
 install(DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/
 	DESTINATION .
 	FILES_MATCHING PATTERN "*.dll")
