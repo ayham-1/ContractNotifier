@@ -81,13 +81,12 @@ if (WIN32)
 		set_target_properties(your_executable PROPERTIES LINK_FLAGS    "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\" /SUBSYSTEM:WINDOWS")
 	endif(CMAKE_BUILD_TYPE STREQUAL "Release")
 	target_link_libraries(contractNotifier Qt5::Core Qt5::Widgets Boost::serialization ${CMAKE_THREAD_LIBS_INIT} CURL::libcurl)
+	add_custom_command(TARGET contractNotifier POST_BUILD
+		COMMAND "${CMAKE_COMMAND}" -E
+		env PATH="${_qt_bin_dir}" "${WINDEPLOYQT_EXECUTABLE}"
+		"$<TARGET_FILE:contractNotifier>"
+		COMMENT "Running windeployqt...")
 endif(WIN32)
-
-add_custom_command(TARGET contractNotifier POST_BUILD
-	COMMAND "${CMAKE_COMMAND}" -E
-	env PATH="${_qt_bin_dir}" "${WINDEPLOYQT_EXECUTABLE}"
-	"$<TARGET_FILE:contractNotifier>"
-	COMMENT "Running windeployqt...")
 
 # Retrieve the absolute path to qmake and then use that path to find
 # the binaries
@@ -121,6 +120,7 @@ add_custom_command(
 	${CMAKE_SOURCE_DIR}/vendor/notifu.exe
 	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/notifu.exe)
 
+if (WIN32)
 # Install stuff
 install(TARGETS contractNotifier
 	RUNTIME DESTINATION "."
@@ -150,3 +150,4 @@ set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS
 	"CreateShortCut \\\"$DESKTOP\\\\ContractNotifier.lnk\\\" \\\"$INSTDIR\\\\contractNotifier.exe\\\"")
 set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "Delete \\\"$DESKTOP\\\\ContractNotifier.lnk\\\"")
 include(CPack)
+endif()
