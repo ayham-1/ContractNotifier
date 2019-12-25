@@ -12,6 +12,6 @@
 	DB Load duration: 0.536969s
 	
 ### Notes:
-Abstract Size: the number of entires/contracts in the database.
-Actual Size: the size in kilobytes in memory.
-Database size on storage is neither Abstract Size nor Actual Size by no means.
+Abstract Size: the number of entires/contracts in the database. <br>
+Actual Size: the size in kilobytes in memory. <br>
+Database size on storage is neither Abstract Size nor Actual Size by no means. <br>
