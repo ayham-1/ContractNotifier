@@ -1,4 +1,0 @@
-Search Benchmark Results:
-	Size of DB: 1,000,000
-	Last Contract search took: 0.834289
-	Average random Contract search took:  0.890232
